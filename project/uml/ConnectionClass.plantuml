@@ -1,0 +1,17 @@
+@startuml
+
+package plugins.connection {
+	ConnectionBase <|-- ssh.Connection
+	ConnectionBase <|-- winrm.Connection
+	ConnectionBase <|-- docker.Connection
+	ConnectionBase <|-- "*.Connection"
+}
+
+ConnectionBase : execute_command()
+ConnectionBase : put_file()
+ConnectionBase : fetch_file()
+ConnectionBase : close()
+
+note "Ansible includes many\nadditional connection plugins\n(not pictured)" as N1
+
+@enduml

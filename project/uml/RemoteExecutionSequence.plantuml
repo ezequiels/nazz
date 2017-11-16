@@ -1,0 +1,18 @@
+@startuml
+participant TaskExecutor
+participant ActionPlugin
+participant Connection
+collections RemoteShell
+TaskExecutor->ActionPlugin: run()
+ActionPlugin->Connection: put_file()
+ActionPlugin->ActionPlugin: consolidate module
+Connection->Connection: _connect()
+ActionPlugin->Connection: exec_command()
+Connection->RemoteShell: put_file()
+Connection->RemoteShell: execute()
+Connection<--RemoteShell: fetch_file()\nreturn response code, stdout, stderr
+Connection->RemoteShell: delete module
+Connection->Connection: _parse_returned_data()
+ActionPlugin<--Connection: return JSON
+TaskExecutor<--ActionPlugin: return response
+@enduml
