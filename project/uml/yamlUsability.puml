@@ -1,0 +1,54 @@
+@startuml
+
+together {
+    together {
+        note as Roles1
+            Roles: Deploy MongoDB
+        end note
+
+        note as Roles2
+            Roles: Deploy Neo4J
+        end note
+    }
+
+
+}
+
+    together {
+        note as Inventory1
+            Inventory: US West
+        end note
+
+        note as Inventory2
+            Inventory: US East
+        end note
+    }
+
+together {
+    note as Config1
+        Deploy MongoDB to US West
+    end note
+
+    note as Config2
+        Deploy Neo4J to US West
+    end note
+
+    note as Config3
+        Deploy Neo4J to US East
+    end note
+
+    note as Config4
+        Deploy MongoDB to US East
+    end note
+}
+
+Roles1 --> Config1
+Roles2 --> Config2
+Roles2 --> Config3
+Roles1 --> Config4
+
+Inventory1 --> Config1
+Inventory1 --> Config2
+Inventory2 --> Config3
+Inventory2 --> Config4
+@enduml

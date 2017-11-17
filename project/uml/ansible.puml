@@ -1,0 +1,23 @@
+@startuml
+
+package "ControlMachine" {
+
+    commandLine - [CLI]
+    [CLI] --> [Engine] : {InventoryManager, \nVariableManager, \nDataLoader, \noptions, \npasswords}
+    [Engine] ..> CLI : {results}
+
+    [Connection] .> [Engine] : {results}
+    [Engine] --> [Connection] : {actionHandler}
+
+    [CLI] - [Configuration]
+}
+
+package "RemoteMachine (1..*)" {
+    protocol <-> [Module]
+
+    [Connection] ---> protocol : {module}\n<<file>>
+    [Connection] ---> protocol : {shell command}\n<<bytes>>
+    protocol ...> [Connection] : {results}\n<<JSON>>
+}
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+class BaseMeta <<metaclass>>
+BaseMeta <.. Base : <<instance of>>
+Base <|-- PlayContext
+
+Base <|-- Task
+Conditional <|-- Task
+Taggable <|-- Task
+Become <|-- Task
+Base <|-- Block
+Conditional <|-- Block
+Taggable <|-- Block
+Become <|-- Block
+Task <|-- Handler
+Task <|-- TaskInclude
+Handler <|-- HandlerTaskInclude
+TaskInclude <|-- HandlerTaskInclude
+Base <|-- LoopControl
+Base <|-- Play
+Taggable <|-- Play
+Become <|-- Play
+Base <|-- PlaybookInclude
+Conditional <|-- PlaybookInclude
+Taggable <|-- PlaybookInclude
+TaskInclude <|-- IncludeRole
+
+class Attribute
+class Conditional
+class IncludedFile
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+
+    class PlaybookExecutor
+    PlaybookExecutor *- InventoryManager
+    PlaybookExecutor : options
+    PlaybookExecutor : passwords
+    PlaybookExecutor : run()
+    PlaybookExecutor *- TaskQueueManager
+
+    class StrategyBase
+    StrategyBase : run(PlayIterator, PlayContext)
+    StrategyBase ...> WorkerProcess : <<instantiate>>
+    StrategyBase *- InventoryManager
+    StrategyBase *-- TaskQueueManager
+
+    class InventoryManager
+    InventoryManager : hosts()
+    InventoryManager : groups()
+    InventoryManager : localhost()
+
+    class TaskQueueManager
+    TaskQueueManager : options
+    TaskQueueManager : passwords
+    TaskQueueManager : run(Play)
+    TaskQueueManager : load_callbacks()
+    TaskQueueManager : send_callback()
+    TaskQueueManager ..> StrategyBase : <<instantiate>>
+    TaskQueueManager ..> PlayIterator : <<instantiate>>
+    TaskQueueManager ..> PlayContext : <<instantiate>>
+    TaskQueueManager *--- InventoryManager
+
+    class Host
+
+    class Play
+    Play *- "*" Role
+    Play : List<String> hosts
+    Play *- "*" Task
+    Play : String strategy
+
+    class PlayContext
+    PlayContext : boolean check_mode
+
+    class Task
+
+    class Connection
+    Connection : execute_command()
+    Connection : put_file()
+    Connection : fetch_file()
+    Connection : close()
+
+    class TaskExecutor
+    TaskExecutor : run()
+    TaskExecutor *-- Host
+    TaskExecutor *-- Task
+    TaskExecutor *-- PlayContext
+    TaskExecutor *--- Connection
+    TaskExecutor *-- "*" TaskResult
+
+    class PlayIterator
+    PlayIterator *-- Play
+
+    class WorkerProcess
+    WorkerProcess : run()
+    WorkerProcess *-- Host
+    WorkerProcess *-- Task
+    WorkerProcess *-- PlayContext
+    WorkerProcess *-- Connection
+    WorkerProcess *-- "*" TaskResult
+    WorkerProcess ..> TaskExecutor : <<instantiate>>
+
+    class TaskResult
+    TaskResult *-- Host
+    TaskResult *- Task
+
+@enduml
