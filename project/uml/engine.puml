@@ -1,5 +1,6 @@
 @startuml
 
+Package Engine {
     class PlaybookExecutor
     PlaybookExecutor *- InventoryManager
     PlaybookExecutor : options
@@ -9,7 +10,7 @@
 
     class StrategyBase
     StrategyBase : run(PlayIterator, PlayContext)
-    StrategyBase ...> WorkerProcess : <<instantiate>>
+    StrategyBase ..> WorkerProcess : <<instantiate>>
     StrategyBase *- InventoryManager
     StrategyBase *-- TaskQueueManager
 
@@ -27,12 +28,12 @@
     TaskQueueManager ..> StrategyBase : <<instantiate>>
     TaskQueueManager ..> PlayIterator : <<instantiate>>
     TaskQueueManager ..> PlayContext : <<instantiate>>
-    TaskQueueManager *--- InventoryManager
+    TaskQueueManager *-- InventoryManager
 
     class Host
 
     class Play
-    Play *- "*" Role
+    Play : List<Role> roles
     Play : List<String> hosts
     Play *- "*" Task
     Play : String strategy
@@ -41,35 +42,46 @@
     PlayContext : boolean check_mode
 
     class Task
+    Task ..> ActionBase : <<instantiate>>
 
+    class ActionBase
+    ActionBase *-- Task
+    ActionBase *- PlayContext
+    ActionBase *- Connection
+    ActionBase : run()
+
+
+    class TaskExecutor
+    TaskExecutor : run()
+    TaskExecutor *- Host
+    TaskExecutor *- Task
+    TaskExecutor *-- PlayContext
+    TaskExecutor *--- Connection
+'    TaskExecutor *-- "*" TaskResult
+
+    class PlayIterator
+    PlayIterator *- Play
+
+    class WorkerProcess
+    WorkerProcess : run()
+    WorkerProcess *- Host
+    WorkerProcess *-- Task
+    WorkerProcess *-- PlayContext
+    WorkerProcess *-- Connection
+'    WorkerProcess *-- "*" TaskResult
+    WorkerProcess ..> TaskExecutor : <<instantiate>>
+
+'    class TaskResult
+'    TaskResult *- Host
+'    TaskResult *- Task
+}
+
+package Connection {
     class Connection
     Connection : execute_command()
     Connection : put_file()
     Connection : fetch_file()
     Connection : close()
-
-    class TaskExecutor
-    TaskExecutor : run()
-    TaskExecutor *-- Host
-    TaskExecutor *-- Task
-    TaskExecutor *-- PlayContext
-    TaskExecutor *--- Connection
-    TaskExecutor *-- "*" TaskResult
-
-    class PlayIterator
-    PlayIterator *-- Play
-
-    class WorkerProcess
-    WorkerProcess : run()
-    WorkerProcess *-- Host
-    WorkerProcess *-- Task
-    WorkerProcess *-- PlayContext
-    WorkerProcess *-- Connection
-    WorkerProcess *-- "*" TaskResult
-    WorkerProcess ..> TaskExecutor : <<instantiate>>
-
-    class TaskResult
-    TaskResult *-- Host
-    TaskResult *- Task
+}
 
 @enduml
