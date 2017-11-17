@@ -1,0 +1,20 @@
+@startuml
+
+package "Ansible" {
+
+    [CLI] <--> [Engine]
+    [Engine] <--> [Connection]
+    [CLI] <-> [Configuration]
+    [Connection]
+
+    package "Utilities" {
+        [Modules]
+        [PluginLoader]
+        [Vault]
+    }
+    note as Note
+     "This diagram sucks so far"
+    end note
+}
+
+@enduml
