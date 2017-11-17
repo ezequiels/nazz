@@ -1,0 +1,16 @@
+@startuml
+title Ansible - Syntax Check
+User->ansible: ansible-playbook --syntax-check
+ansible->PlaybookCLI: run()
+PlaybookCLI->InventoryManager: list_hosts()
+PlaybookCLI->PlayBookExecutor:run()
+PlayBookExecutor->Playbook:load()
+Playbook-->PlayBookExecutor: return Playbook
+PlayBookExecutor->Playbook:get_plays(Playbook)
+Playbook-->PlayBookExecutor: return plays
+PlayBookExecutor->Playbook: post_validate()
+Playbook-->PlayBookExecutor: return bool
+PlayBookExecutor-->PlaybookCLI: return result
+PlaybookCLI-->ansible: return result
+ansible-->User: return
+@enduml
