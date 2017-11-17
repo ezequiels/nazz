@@ -7,17 +7,18 @@ collections RemoteHost
 
 TaskExecutor->ActionBase: run()
 
-ActionBase->ActionBase: _configure_module()
 ActionBase->Connection: put_file()
-
-Connection->Connection: _connect()
 Connection->RemoteHost: transfer module data
+Connection<--RemoteHost: return remote path
+ActionBase<--Connection: return remote path
 
 ActionBase->Connection: exec_command()
+
 Connection->RemoteHost: run module remotely
+Connection<--RemoteHost: return response code, stdout, stderr
+
 ActionBase<--Connection: return response code, stdout, stderr
 
-ActionBase->ActionBase: _parse_returned_data()
 TaskExecutor<--ActionBase: return JSON
 
 @enduml
