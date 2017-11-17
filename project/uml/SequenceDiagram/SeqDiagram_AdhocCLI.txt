@@ -1,0 +1,31 @@
+title Ansible Adhoc CLI
+User->ansible: main
+ansible->AdhocCLI: parse()
+ansible->AdhocCLI: run()
+AdhocCLI->InventoryManager: list_hosts()
+InventoryManager-->AdhocCLI: hostnames
+AdhocCLI->Play: load()
+Play-->AdhocCLI: return load_data
+AdhocCLI->Playbook: Playbook(loader)
+AdhocCLI->TaskQueueManager:run(play)
+TaskQueueManager->Play: post_validate()
+TaskQueueManager->PlayIterator: init()
+PlayIterator-->TaskQueueManager: return iterator
+TaskQueueManager->StrategyModule: run()
+StrategyModule->WorkerProcess: start()
+WorkerProcess->TaskExecuter: run()
+TaskExecuter->ActionModule: execute_module()
+ActionModule-->TaskExecuter: return data
+TaskExecuter-->WorkerProcess: return result
+StrategyModule->StrategyModule:process_pending_results()
+StrategyModule-->TaskQueueManager: return result
+TaskQueueManager-> StrategyModule: cleanup()
+TaskQueueManager-->AdhocCLI: return play_return
+AdhocCLI->TaskQueueManager: cleanup()
+AdhocCLI-->ansible: return result
+ansible-->User: return
+
+
+
+
+

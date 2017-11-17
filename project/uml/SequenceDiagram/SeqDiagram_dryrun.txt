@@ -1,0 +1,36 @@
+title Ansible - Dry Run
+User->ansible-playbook:ansible-playbook --check 
+ansible-playbook->PlaybookCLI: run()
+PlaybookCLI->InventoryManager: list_hosts()
+PlaybookCLI->PlayBookExecutor:run()
+PlayBookExecutor->Playbook:load()
+Playbook-->PlayBookExecutor: return Playbook
+PlayBookExecutor->Playbook:get_plays(Playbook)
+Playbook-->PlayBookExecutor: return plays
+PlayBookExecutor->VariableManager: get_vars(play)
+VariableManager-->PlayBookExecutor:return all_vars
+PlayBookExecutor->TaskQueueManager:run(play)
+TaskQueueManager->PlayIterator: init()
+PlayIterator-->TaskQueueManager: return iterator
+TaskQueueManager->StrategyModule: run()
+StrategyModule->WorkerProcess: start()
+WorkerProcess->TaskExecuter: run()
+TaskExecuter->ActionModule: execute_module()
+ActionModule-->TaskExecuter: return data
+TaskExecuter-->WorkerProcess: return result
+StrategyModule->StrategyModule:process_pending_results()
+StrategyModule-->TaskQueueManager: return result
+TaskQueueManager-> StrategyModule: cleanup()
+TaskQueueManager-->PlaybookCLI: return play_return
+PlaybookCLI->TaskQueueManager: cleanup()
+PlaybookCLI-->ansible-playbook: return result
+ansible-playbook-->User: return
+
+
+
+
+
+
+
+
+
