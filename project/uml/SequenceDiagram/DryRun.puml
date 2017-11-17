@@ -1,27 +1,23 @@
 @startuml
 title Ansible - Dry Run
+
+actor User
 User->ansible:ansible-playbook --check
 ansible->PlaybookCLI: run()
 PlaybookCLI->InventoryManager: list_hosts()
 PlaybookCLI->PlaybookExecutor:run()
 PlaybookExecutor->Playbook:get_plays()
 Playbook-->PlaybookExecutor: return plays
-== Iterate this block for each play... ==
-PlaybookExecutor->TaskQueueManager:run(play)
-TaskQueueManager->StrategyBase: run()
-StrategyBase->WorkerProcess: run()
-note left: Abstraction alert: StrategyBase grabs \na WorkerProcess from a thread pool
-WorkerProcess->TaskExecutor: run()
-TaskExecutor->ActionBase: run()
-ActionBase-->TaskExecutor: return data
-TaskExecutor-->WorkerProcess: return result
-WorkerProcess-->StrategyBase: return result
-note right: Abstraction alert: The WorkerProcess result \nactually returns via the thread pool
-StrategyBase-->TaskQueueManager: return result
-TaskQueueManager-->PlaybookExecutor: return play_return
-== ==
-TaskQueueManager-> StrategyBase: cleanup()
-PlaybookCLI->TaskQueueManager: cleanup()
+loop for all plays
+    PlaybookExecutor->TaskQueueManager:run(play)
+    entity RemoteMachine
+    note right: Abstraction alert: \nThe TaskQueueManager \ndoesn't talk to the remote \nmachine directly by a long \nshot.
+    TaskQueueManager->RemoteMachine
+    RemoteMachine-->TaskQueueManager: return result
+    TaskQueueManager-->PlaybookExecutor: return play_return
+end
+PlaybookExecutor->TaskQueueManager: cleanup()
+PlaybookExecutor-->PlaybookCLI: return result
 PlaybookCLI-->ansible: return result
 ansible-->User: return
 
