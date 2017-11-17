@@ -3,24 +3,24 @@ title Ansible - Dry Run
 User->ansible:ansible-playbook --check
 ansible->PlaybookCLI: run()
 PlaybookCLI->InventoryManager: list_hosts()
-PlaybookCLI->PlayBookExecutor:run()
-PlayBookExecutor->Playbook:load()
-Playbook-->PlayBookExecutor: return Playbook
-PlayBookExecutor->Playbook:get_plays(Playbook)
-Playbook-->PlayBookExecutor: return plays
-PlayBookExecutor->TaskQueueManager:run(play)
-TaskQueueManager->PlayIterator: init()
-PlayIterator-->TaskQueueManager: return iterator
+PlaybookCLI->PlaybookExecutor:run()
+PlaybookExecutor->Playbook:get_plays()
+Playbook-->PlaybookExecutor: return plays
+== Iterate this block for each play... ==
+PlaybookExecutor->TaskQueueManager:run(play)
 TaskQueueManager->StrategyBase: run()
-StrategyBase->WorkerProcess: start()
-WorkerProcess->TaskExecuter: run()
-TaskExecuter->ActionBase: run()
-ActionBase-->TaskExecuter: return data
-TaskExecuter-->WorkerProcess: return result
-StrategyBase->StrategyBase:process_results()
+StrategyBase->WorkerProcess: run()
+note left: Abstraction alert: StrategyBase grabs \na WorkerProcess from a thread pool
+WorkerProcess->TaskExecutor: run()
+TaskExecutor->ActionBase: run()
+ActionBase-->TaskExecutor: return data
+TaskExecutor-->WorkerProcess: return result
+WorkerProcess-->StrategyBase: return result
+note right: Abstraction alert: The WorkerProcess result \nactually returns via the thread pool
 StrategyBase-->TaskQueueManager: return result
+TaskQueueManager-->PlaybookExecutor: return play_return
+== ==
 TaskQueueManager-> StrategyBase: cleanup()
-TaskQueueManager-->PlaybookCLI: return play_return
 PlaybookCLI->TaskQueueManager: cleanup()
 PlaybookCLI-->ansible: return result
 ansible-->User: return
