@@ -46,16 +46,19 @@ system Mode_Control
 				is_suspended;
 			
 		guarantee "At the instant the clear button is pressed, if the microwave was cooking, then the microwave shall stop cooking" :
-			true; 
+			(defs.rising_edge(clear) and pre(is_cooking)) =>
+				not is_cooking;
 			
 		guarantee "At the instant when the clear button is pressed, if the microwave is in suspended mode, it shall enter the setup mode" : 		
-			true; 
+			(defs.rising_edge(clear) and pre(is_suspended)) =>
+				is_setup;
 			
 		guarantee "If suspended, at the instant the start key is pressed the microwave shall enter cooking mode if the door is closed and the seconds_to_cook is greater than 0" :
 			true; 
 			
 		guarantee "If seconds_to_cook = 0, microwave will be in setup mode" : 
-			true ; 
+			(seconds_to_cook = 0) =>
+				is_setup;
 	**};
 
 end Mode_Control ; 
