@@ -1,19 +1,23 @@
 @startuml
+
 participant TaskExecutor
 participant ActionBase
 participant Connection
-collections RemoteShell
+collections RemoteHost
+
 TaskExecutor->ActionBase: run()
+
+ActionBase->ActionBase: _configure_module()
 ActionBase->Connection: put_file()
-ActionBase->ActionBase: consolidate module
+
 Connection->Connection: _connect()
+Connection->RemoteHost: transfer module data
+
 ActionBase->Connection: exec_command()
-Connection->RemoteShell: put_file()
-Connection->RemoteShell: execute()
-Connection<--RemoteShell: fetch_file()\nreturn response code, stdout, stderr
-note right #lime: Something is wrong here --\nIs this a return or a method call?
-Connection->RemoteShell: delete module
-Connection->Connection: _parse_returned_data()
-ActionBase<--Connection: return JSON
-TaskExecutor<--ActionBase: return response
+Connection->RemoteHost: run module remotely
+ActionBase<--Connection: return response code, stdout, stderr
+
+ActionBase->ActionBase: _parse_returned_data()
+TaskExecutor<--ActionBase: return JSON
+
 @enduml
