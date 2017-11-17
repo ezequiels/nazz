@@ -1,0 +1,23 @@
+@startuml
+
+class Exception
+
+Exception <|-- AssertionError
+Exception <|--- AnsibleError
+AssertionError <|-- AnsibleAssertionError
+AnsibleError <|-- AnsibleAssertionError
+AnsibleError <|-- AnsibleOptionsError
+AnsibleError <|-- AnsibleRuntimeError
+AnsibleError <|--  AnsibleParserError
+AnsibleError <|-- AnsibleInternalError
+AnsibleRuntimeError <|--- AnsibleModuleError
+AnsibleRuntimeError <|-- AnsibleConnectionFailure
+AnsibleRuntimeError <|--- AnsibleFilterError
+AnsibleRuntimeError <|-- AnsibleLookupError
+AnsibleRuntimeError <|--- AnsibleCallbackError
+AnsibleRuntimeError <|-- AnsibleUndefinedVariable
+AnsibleRuntimeError <|--- AnsibleFileNotFound
+AnsibleRuntimeError <|-- AnsibleActionSkip
+AnsibleRuntimeError <|--- AnsibleActionFail
+
+@enduml
