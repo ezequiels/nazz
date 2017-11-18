@@ -1,0 +1,12 @@
+@startuml
+title ansible-vault create
+participant "ansible-vault"
+"ansible-vault"->VaultCLI: parse()
+"ansible-vault"->VaultCLI: run()
+VaultCLI->DataLoader: setup_vault_secrets()
+VaultCLI<--DataLoader: return()
+VaultCLI->VaultCLI: execute_encrypt()
+VaultCLI->VaultCLI: execute_encrypt_string()
+VaultCLI->VaultCLI: execute_create()
+note left: Object display?
+@enduml
