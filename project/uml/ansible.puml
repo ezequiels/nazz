@@ -6,8 +6,8 @@ package "ControlMachine" {
     [CLI] --> [Engine] : {InventoryManager, \nVariableManager, \nDataLoader, \noptions, \npasswords}
     [Engine] ..> CLI : {results}
 
-    [Connection] .> [Engine] : {results}
-    [Engine] --> [Connection] : {actionHandler}
+    [Transport] .> [Engine] : {results}
+    [Engine] --> [Transport] : {actionHandler}
 
     [CLI] - [Configuration]
 }
@@ -15,9 +15,9 @@ package "ControlMachine" {
 package "RemoteMachine (1..*)" {
     protocol <-> [Module]
 
-    [Connection] ---> protocol : {module}\n<<file>>
-    [Connection] ---> protocol : {shell command}\n<<bytes>>
-    protocol ...> [Connection] : {results}\n<<JSON>>
+    [Transport] ---> protocol : {module}\n<<file>>
+    [Transport] ---> protocol : {shell command}\n<<bytes>>
+    protocol ...> [Transport] : {results}\n<<JSON>>
 }
 
 @enduml
