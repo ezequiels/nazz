@@ -1,0 +1,25 @@
+@startuml
+(*)  --> === B1 ===
+
+=== B1 === --> "Run next task on Host 1"
+
+if "finished all tasks?" then
+--> [Yes] === B2 ===
+else
+--> [No] "Run next task on Host 1"
+
+=== B1 === --> "Run next task on Host 2"
+if "finished all tasks?" then
+--> [Yes] === B2 ===
+else
+--> [No] "Run next task on Host 2"
+
+=== B2 === --> if "any failures?" then
+--> [Yes] "failure"
+else
+--> [No] "success"
+
+"failure" --> (*)
+"success" --> (*)
+
+@enduml
