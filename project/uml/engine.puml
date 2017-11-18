@@ -1,5 +1,13 @@
 @startuml
 
+package Transport {
+    class Connection
+    Connection : execute_command()
+    Connection : put_file()
+    Connection : fetch_file()
+    Connection : close()
+}
+
 Package Engine {
     class PlaybookExecutor
     PlaybookExecutor *- InventoryManager
@@ -74,14 +82,6 @@ Package Engine {
 '    class TaskResult
 '    TaskResult *- Host
 '    TaskResult *- Task
-}
-
-package Connection {
-    class Connection
-    Connection : execute_command()
-    Connection : put_file()
-    Connection : fetch_file()
-    Connection : close()
 }
 
 @enduml
