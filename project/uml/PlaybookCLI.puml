@@ -1,0 +1,19 @@
+@startuml
+
+participant PlaybookCLI
+create PlaybookExecutor
+PlaybookCLI -> PlaybookExecutor: init(playbooks, inventory, variable_manager, loader, options, passwords)
+create TaskQueueManager
+PlaybookExecutor -> TaskQueueManager: init(...)
+PlaybookCLI -> PlaybookExecutor: run()
+
+loop for each play
+PlaybookExecutor -> TaskQueueManager: run(play)
+...
+TaskQueueManager --> PlaybookExecutor: result
+end
+
+PlaybookExecutor --> PlaybookCLI: result
+
+@enduml
+

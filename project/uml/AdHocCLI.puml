@@ -1,0 +1,10 @@
+@startuml
+
+participant AdHocCLI
+create TaskQueueManager
+AdHocCLI -> TaskQueueManager: init(inventory, variable_manager, loader, options, passwords, stdout_callback, run_additional_callbacks, run_tree)
+AdHocCLI -> TaskQueueManager: run(play)
+...
+TaskQueueManager --> AdHocCLI: result
+@enduml
+
