@@ -2,16 +2,35 @@
 
 package "Ansible" {
 
-    [CLI] <--> [Engine]
-    [Engine] <--> [Connection]
-    [CLI] <-> [Configuration]
-    [Connection]
+    package "UI" {
+        [CLI]
+    }
+
+    package "Infrastructure" {
+        [Engine]
+    }
 
     package "Utilities" {
-        [Modules]
-        [PluginLoader]
-        [Vault]
+        [Loaders]
+        [Parsers]
+        [Transport]
+        [Configuration]
     }
+
+    package "Extensions" {
+        [Modules]
+        [Plugins]
+    }
+
+    [CLI] <--> [Engine]
+    [CLI] <-> [Configuration]
+    [Configuration] <--> [Parsers]
+    [CLI] <--> [Parsers]
+    [Engine] <--> [Transport]
+    [Transport] <---> [Plugins]
+    [Engine] <--> [Modules]
+
+
     note as Note
      "This diagram sucks so far"
     end note
