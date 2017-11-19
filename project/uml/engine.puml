@@ -65,10 +65,11 @@ Package Engine {
     TaskExecutor *- Task
     TaskExecutor *-- PlayContext
     TaskExecutor *--- Connection
+    TaskExecutor ..> ActionBase : <<instantiate>>
 '    TaskExecutor *-- "*" TaskResult
 
     class PlayIterator
-    PlayIterator *- Play
+    PlayIterator *-- Play
 
     class WorkerProcess
     WorkerProcess : run()
