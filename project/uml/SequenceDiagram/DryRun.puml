@@ -1,6 +1,4 @@
 @startuml
-title Ansible - Dry Run
-
 actor User
 User->ansible:ansible-playbook --check
 ansible->PlaybookCLI: run()
