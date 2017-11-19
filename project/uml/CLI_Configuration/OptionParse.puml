@@ -1,0 +1,6 @@
+@startuml
+CLI --> OptionParser: __init__(..)
+CLI <--OptionParser: return parser
+CLI -> OptionParser: parser.parse_args(args)
+CLI <-- OptionParser: return options,args
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+CLI -> InventoryManager: init(loader,source)
+InventoryManager->InventoryData: init()
+InventoryManager<--InventoryData: return
+InventoryManager->InventoryManager: parse_source()
+CLI <-- InventoryManager: return
+CLI -> InventoryManager: list_hosts(patterns)
+CLI <-- InventoryManager: return hosts
+
+@enduml

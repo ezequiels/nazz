@@ -1,0 +1,7 @@
+@startuml
+CLI -> Display: init(..)
+CLI -> Display: vv(version)
+Display -> Console: display(version, stderr:False)
+CLI -> Display: warning(msg)
+Display -> Console: display(msg, stderr:True)
+@enduml
