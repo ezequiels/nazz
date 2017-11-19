@@ -1,5 +1,6 @@
 @startuml
 
+title Ansible Task Execution
 TaskQueueManager->StrategyBase: run()
 StrategyBase->WorkerProcess: run()
 note left: Abstraction alert: StrategyBase grabs \na WorkerProcess from a thread pool
