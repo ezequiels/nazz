@@ -1,8 +1,7 @@
 @startuml
+participant CLI
+create DataLoader
 CLI -> DataLoader: init()
-CLI <-- DataLoader: return
 CLI -> DataLoader: set_basedir(basedir)
-CLI <-- DataLoader: return
 CLI -> DataLoader: set_vault_secrets(vault_secrets)
-CLI <-- DataLoader: return
 @enduml
