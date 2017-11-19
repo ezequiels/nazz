@@ -1,5 +1,8 @@
 @startuml
+participant CLI
+create InventoryManager
 CLI -> InventoryManager: init(loader,source)
+create InventoryData
 InventoryManager->InventoryData: init()
 InventoryManager<--InventoryData: return
 InventoryManager->InventoryManager: parse_source()
