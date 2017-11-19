@@ -1,7 +1,11 @@
 @startuml
+
+participant CLI
+create Display
 CLI -> Display: init(..)
-CLI -> Display: vv(version)
-Display -> Console: display(version, stderr:False)
-CLI -> Display: warning(msg)
-Display -> Console: display(msg, stderr:True)
+CLI -> Display: verbose("message one")
+entity Console
+Display -> Console: display("message one", stderr:False)
+CLI -> Display: warning("message two")
+Display -> Console: display("message two", stderr:True)
 @enduml
