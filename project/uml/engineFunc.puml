@@ -1,0 +1,59 @@
+@startuml
+
+
+package Transport {
+
+    class Connection
+    Connection : execute_command()
+    Connection : put_file()
+    Connection : fetch_file()
+    Connection : close()
+}
+
+Package Engine {
+    class PlaybookExecutor
+    PlaybookExecutor : inventoryManager
+    PlaybookExecutor : options
+    PlaybookExecutor : passwords
+    PlaybookExecutor : run()
+    PlaybookExecutor -> TaskQueueManager : run()
+    PlaybookExecutor <. TaskQueueManager : play_return
+
+    class TaskQueueManager
+    TaskQueueManager : options
+    TaskQueueManager : passwords
+    TaskQueueManager : inventoryManager
+    TaskQueueManager : run(Play)
+    TaskQueueManager : load_callbacks()
+    TaskQueueManager : send_callback()
+    TaskQueueManager --> StrategyBase : run()
+    TaskQueueManager <.. StrategyBase : result
+
+    class StrategyBase
+    StrategyBase : inventoryManager
+    StrategyBase : run(PlayIterator, PlayContext)
+    StrategyBase -> WorkerProcess : run()
+    StrategyBase <. WorkerProcess : result
+
+
+    class WorkerProcess
+    WorkerProcess : run()
+    WorkerProcess : host
+    WorkerProcess --> TaskExecutor : run()
+    WorkerProcess <.. TaskExecutor : result
+
+    class TaskExecutor
+    TaskExecutor : run()
+    TaskExecutor : host
+    TaskExecutor -> ActionBase : run()
+    TaskExecutor <.. ActionBase : data
+
+
+    class ActionBase
+    ActionBase : run()
+    ActionBase -> Connection : put_file()
+    ActionBase -> Connection : execute_command()
+    ActionBase <.. Connection : response
+}
+
+@enduml

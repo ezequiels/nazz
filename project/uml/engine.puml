@@ -28,7 +28,7 @@ Package Engine {
     TaskQueueManager : run(Play)
     TaskQueueManager : load_callbacks()
     TaskQueueManager : send_callback()
-    TaskQueueManager ..> StrategyBase : <<instantiate>>
+    TaskQueueManager .> StrategyBase : <<instantiate>>
     TaskQueueManager ..> PlayIterator : <<instantiate>>
     TaskQueueManager ..> PlayContext : <<instantiate>>
     TaskQueueManager : inventoryManager
@@ -36,14 +36,13 @@ Package Engine {
     class Play
     Play : List<Role> roles
     Play : List<String> hosts
-    Play *- "*" Task
+    Play *-- "*" Task
     Play : String strategy
 
     class PlayContext
     PlayContext : boolean check_mode
 
     class Task
-    Task ..> ActionBase : <<instantiate>>
 
     class ActionBase
     ActionBase *-- Task
@@ -58,10 +57,11 @@ Package Engine {
     TaskExecutor *- Task
     TaskExecutor *-- PlayContext
     TaskExecutor *--- Connection
+    TaskExecutor ..> Connection : <<instantiate>>
     TaskExecutor ..> ActionBase : <<instantiate>>
 
     class PlayIterator
-    PlayIterator *-- Play
+    PlayIterator *- Play
 
     class WorkerProcess
     WorkerProcess : run()
