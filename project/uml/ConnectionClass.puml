@@ -13,6 +13,6 @@ ConnectionBase : fetch_file()
 ConnectionBase : close()
 ConnectionBase : _connect()
 
-note "Ansible includes many\nadditional connection plugins\n(not pictured)" as N1
+note "Ansible includes many\nadditional connection\nplugins (not pictured)" as N1
 
 @enduml
