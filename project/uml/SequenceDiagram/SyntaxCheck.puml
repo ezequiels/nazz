@@ -1,5 +1,5 @@
 @startuml
-title Ansible - Syntax Check
+actor User
 User->ansible: ansible-playbook --syntax-check
 ansible->PlaybookCLI: run()
 PlaybookCLI->PlaybookExecutor:run()
@@ -8,8 +8,8 @@ Playbook-->PlaybookExecutor: return Playbook
 PlaybookExecutor->Playbook:get_plays()
 Playbook-->PlaybookExecutor: return plays
 loop for all plays
-PlaybookExecutor->Base: post_validate()
-Base-->PlaybookExecutor: return bool
+    PlaybookExecutor->Base: post_validate()
+    Base-->PlaybookExecutor: return bool
 end
 PlaybookExecutor-->PlaybookCLI: return result
 PlaybookCLI-->ansible: return result

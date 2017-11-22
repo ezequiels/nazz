@@ -1,0 +1,25 @@
+@startuml
+"SomeClass: SomeObject" -> "PluginLoader: action_loader" : get(name, *args, **kwargs)
+activate "PluginLoader: action_loader"
+create "ansible.plugins.action.[name].ActionModule: instance"
+"PluginLoader: action_loader" -> "ansible.plugins.action.[name].ActionModule: instance" : init(*args, *kwargs)
+activate "ansible.plugins.action.[name].ActionModule: instance"
+"ansible.plugins.action.[name].ActionModule: instance" --> "PluginLoader: action_loader" : ActionModule self
+"PluginLoader: action_loader" --> "SomeClass: SomeObject" : ActionModule instance
+deactivate "PluginLoader: action_loader"
+
+"SomeClass: SomeObject" -> "PluginLoader: vars_loader" : get(name, *args, **kwargs)
+activate "PluginLoader: vars_loader"
+create "ansible.plugins.vars.[name].VarsModule: instance"
+"PluginLoader: vars_loader" -> "ansible.plugins.vars.[name].VarsModule: instance" : init(*args, *kwargs)
+activate "ansible.plugins.vars.[name].VarsModule: instance"
+"ansible.plugins.vars.[name].VarsModule: instance" --> "PluginLoader: vars_loader" : VarsModule self
+"PluginLoader: vars_loader" --> "SomeClass: SomeObject" : VarsModule instance
+deactivate "PluginLoader: vars_loader"
+
+"SomeClass: SomeObject" -> "ansible.plugins.action.[name].ActionModule: instance" : do work
+...
+"SomeClass: SomeObject" -> "ansible.plugins.vars.[name].VarsModule: instance" : do work
+...
+
+@enduml

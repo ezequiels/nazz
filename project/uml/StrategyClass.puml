@@ -1,0 +1,14 @@
+@startuml
+
+@startuml
+
+package plugins.strategy {
+    StrategyBase <|-- free.StrategyModule
+	StrategyBase <|-- linear.StrategyModule
+    linear.StrategyModule <|-- debug.StrategyModule
+}
+
+StrategyBase : run()
+StrategyBase : cleanup()
+
+@enduml

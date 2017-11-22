@@ -1,6 +1,4 @@
 @startuml
-title Ansible - Dry Run
-
 actor User
 User->ansible:ansible-playbook --check
 ansible->PlaybookCLI: run()
@@ -16,6 +14,8 @@ loop for all plays
     RemoteMachine-->TaskQueueManager: return result
     TaskQueueManager-->PlaybookExecutor: return play_return
 end
+PlaybookExecutor->TaskQueueManager: unreachable_hosts()
+TaskQueueManager-->PlaybookExecutor: return unreachable_hosts
 PlaybookExecutor->TaskQueueManager: cleanup()
 PlaybookExecutor-->PlaybookCLI: return result
 PlaybookCLI-->ansible: return result

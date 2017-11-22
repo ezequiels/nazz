@@ -1,0 +1,11 @@
+@startuml
+
+participant CLI
+create Display
+CLI -> Display: init(..)
+CLI -> Display: verbose("message one")
+entity Console
+Display -> Console: write("message one", stderr:False)
+CLI -> Display: warning("message two")
+Display -> Console: write("message two", stderr:True)
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+title Base CLI Configuration
+package Configuration <<Rectangle>>{
+package plugins{
+    class PluginLoader
+package inventory {
+	class InventoryManager
+}
+package callback {
+    class CallbackModule
+}
+}
+
+package utils{
+    class Display
+}
+
+package parsing{
+    class DataLoader
+}
+
+package vars{
+   class VariableManager
+}
+
+package python27.Lib {
+	class OptionParser
+}
+}
+
+@enduml

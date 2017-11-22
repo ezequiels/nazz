@@ -1,0 +1,8 @@
+@startuml
+participant CLI
+create OptionParser
+CLI -> OptionParser: init(..)
+CLI <-- OptionParser: return parser
+CLI -> OptionParser: parse_args(args)
+CLI <-- OptionParser: return options, args
+@enduml
