@@ -11,6 +11,7 @@ ConnectionBase : execute_command()
 ConnectionBase : put_file()
 ConnectionBase : fetch_file()
 ConnectionBase : close()
+ConnectionBase : _connect()
 
 note "Ansible includes many\nadditional connection plugins\n(not pictured)" as N1
 

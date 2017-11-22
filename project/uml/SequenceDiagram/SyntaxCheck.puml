@@ -1,6 +1,4 @@
 @startuml
-title Ansible - Syntax Check
-
 actor User
 User->ansible: ansible-playbook --syntax-check
 ansible->PlaybookCLI: run()
