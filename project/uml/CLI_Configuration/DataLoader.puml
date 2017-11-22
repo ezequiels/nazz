@@ -4,4 +4,9 @@ create DataLoader
 CLI -> DataLoader: init()
 CLI -> DataLoader: set_basedir(basedir)
 CLI -> DataLoader: set_vault_secrets(vault_secrets)
+
+note right
+     "This class reads data
+     from the YAML files"
+end note
 @enduml

@@ -6,6 +6,11 @@ StrategyBase->WorkerProcess: run()
 note left: Abstraction alert: StrategyBase grabs \na WorkerProcess from a thread pool
 WorkerProcess->TaskExecutor: run()
 TaskExecutor->ActionBase: run()
+ActionBase -> Connection: exec_command()
+entity RemoteMachine
+Connection->RemoteMachine:run module remotely
+Connection <-- RemoteMachine: return response
+ActionBase <-- Connection: return response
 ActionBase-->TaskExecutor: return data
 TaskExecutor-->WorkerProcess: return result
 WorkerProcess-->StrategyBase: return result

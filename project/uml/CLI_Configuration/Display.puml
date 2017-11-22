@@ -5,7 +5,7 @@ create Display
 CLI -> Display: init(..)
 CLI -> Display: verbose("message one")
 entity Console
-Display -> Console: display("message one", stderr:False)
+Display -> Console: write("message one", stderr:False)
 CLI -> Display: warning("message two")
-Display -> Console: display("message two", stderr:True)
+Display -> Console: write("message two", stderr:True)
 @enduml

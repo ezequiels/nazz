@@ -6,7 +6,7 @@ create InventoryData
 InventoryManager->InventoryData: init()
 InventoryManager->InventoryManager: parse_source()
 CLI <-- InventoryManager: return
-CLI -> InventoryManager: get_hosts(patterns)
+CLI -> InventoryManager: list_hosts(patterns)
 loop for each pattern
 InventoryManager -> InventoryData : get_host(pattern)
 InventoryData --> InventoryManager : host

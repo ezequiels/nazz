@@ -1,55 +1,32 @@
 @startuml
 
 title Base CLI Configuration
-package cli.CLI{
-class CLI
-}
 package Configuration <<Rectangle>>{
 package plugins{
-    PluginLoader <|-- CLI
+    class PluginLoader
 package inventory {
-	InventoryManager <|-- CLI
+	class InventoryManager
 }
 package callback {
-    CallbackModule <|-- CLI
+    class CallbackModule
 }
 }
 
 package utils{
-    Display <|-- CLI
+    class Display
 }
 
 package parsing{
-    DataLoader <|-- CLI
+    class DataLoader
 }
 
 package vars{
-    VariableManager <|-- CLI
+   class VariableManager
 }
 
 package python27.Lib {
-	OptionParser <|-- CLI
+	class OptionParser
 }
 }
 
-@enduml
-
-@startuml
-
-title Additional Execution CLI Configuration
-
-package cli.CLI{
-    class AdhocCLI
-    class PlaybookCLI
-    class ConsoleCLI
-}
-package Configuration <<Rectangle>>{
-package Playbook{
-    Playbook <|-- AdhocCLI
-    Playbook <|-- PlaybookCLI
-    Play <|-- PlaybookCLI
-    Play <|-- ConsoleCLI
-    PlayContext <|-- PlaybookCLI
-}
-}
 @enduml
