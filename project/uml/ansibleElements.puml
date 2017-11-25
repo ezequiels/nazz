@@ -10,30 +10,25 @@ package "Ansible" {
         [Engine]
     }
 
-    package "Utilities" {
-        [Loaders]
+    package "Utilities" as utilities{
         [Parsers]
         [Transport]
         [Configuration]
+        [Loaders]
     }
 
-    package "Extensions" {
+    package "Extensions" as extensions {
         [Modules]
         [Plugins]
     }
 
     [CLI] <--> [Engine]
     [CLI] <-> [Configuration]
-    [Configuration] <--> [Parsers]
-    [CLI] <--> [Parsers]
+    [Configuration] <-> [Parsers]
     [Engine] <--> [Transport]
-    [Transport] <---> [Plugins]
-    [Engine] <--> [Modules]
+    [Engine] <---> [Modules]
 
-
-    note as Note
-     "This diagram sucks so far"
-    end note
+    note bottom of Loaders: <b>Loaders</b> and <b>Plugins</b> are used almost everywhere
 }
 
 @enduml

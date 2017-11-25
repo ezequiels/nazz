@@ -3,7 +3,6 @@
 title Ansible Adhoc CLI
 actor User
 User->ansible: main
-ansible->AdhocCLI: parse()
 ansible->AdhocCLI: run()
 AdhocCLI->InventoryManager: list_hosts()
 InventoryManager-->AdhocCLI: hostnames
@@ -14,9 +13,15 @@ loop for all plays
     TaskQueueManager->StrategyBase: run()
     StrategyBase->WorkerProcess: start()
     WorkerProcess->TaskExecuter: run()
-    TaskExecuter->ActionModule: execute_module()
-    ActionModule-->TaskExecuter: return data
+    TaskExecuter->ActionBase: execute_module()
+    ActionBase -> Connection: exec_command()
+    entity RemoteMachine
+    Connection->RemoteMachine:run module remotely
+    Connection <-- RemoteMachine: return response
+    ActionBase <-- Connection: return response
+    ActionBase-->TaskExecuter: return data
     TaskExecuter-->WorkerProcess: return result
+    WorkerProcess <- WorkerProcess: put result in queue
     StrategyBase->StrategyBase:process_results()
     StrategyBase-->TaskQueueManager: return result
     TaskQueueManager-> StrategyBase: cleanup()

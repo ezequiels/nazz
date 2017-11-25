@@ -3,19 +3,26 @@
 participant TaskExecutor
 participant ActionBase
 participant Connection
-collections RemoteHost
+boundary "SSH client/server connection" as SSH
+control "ssh daemon (or winrm service)" as daemon
 
 TaskExecutor->ActionBase: run()
 
 ActionBase->Connection: put_file()
-Connection->RemoteHost: transfer module data
-Connection<--RemoteHost: return remote path
+Connection->SSH: transfer module data
+SSH->daemon
+daemon->daemon: save module to disk
+daemon-->SSH
+Connection<--SSH: transfer complete
 ActionBase<--Connection: return remote path
 
 ActionBase->Connection: exec_command()
 
-Connection->RemoteHost: run module remotely
-Connection<--RemoteHost: return response code, stdout, stderr
+Connection->SSH: run module remotely
+SSH->daemon
+daemon->daemon: execute shell command
+daemon-->SSH
+Connection<--SSH: return response code, stdout, stderr
 
 ActionBase<--Connection: return response code, stdout, stderr
 

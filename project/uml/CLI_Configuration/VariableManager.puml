@@ -5,9 +5,9 @@ CLI -> VariableManager: init(loader,inventory)
 CLI -> VariableManager: load_extra_vars(loader, options)
 loop for each extra_var in options
 VariableManager -> DataLoader: load_from_file(extra_var)
+DataLoader -> DataLoader: read vars from YAML file
 VariableManager <-- DataLoader: return parsed_data
 end loop
-note left: "Extra vars are read from \na YAML file here"
 CLI <-- VariableManager: return extra_vars()
 
 CLI -> VariableManager: load_options_vars(options)
