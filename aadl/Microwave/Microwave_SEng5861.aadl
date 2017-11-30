@@ -18,44 +18,72 @@ system Mode_Control
 		eq is_suspended : bool = defs.is_suspended(cooking_mode);
 		eq is_running : bool = defs.is_running(cooking_mode);
 		
+		eq start_pressed : bool = defs.rising_edge(start);
+		eq clear_pressed : bool = defs.rising_edge(clear);
+		
+		eq entered_cooking : bool = defs.rising_edge(is_cooking);
+		eq entered_setup : bool = defs.rising_edge(is_setup);
+		eq entered_suspended : bool = defs.rising_edge(is_suspended);
+		eq entered_running : bool = defs.rising_edge(is_running);
+		
+		eq left_cooking : bool = defs.falling_edge(is_cooking);
+		eq left_setup : bool = defs.falling_edge(is_setup);
+		eq left_suspended : bool = defs.falling_edge(is_suspended);
+		eq left_running : bool = defs.falling_edge(is_running);
+		
+		eq door_just_closed : bool = defs.rising_edge(door_closed);
+		eq door_just_opened : bool = defs.falling_edge(door_closed);
+		
+		eq clock : int = prev(clock, 0) + 1;
 		
 		-- A freebie.
 		assume "seconds_to_cook is greater than or equal to zero" : 
 			seconds_to_cook >= 0; 
 
+		-- #1
 		guarantee "The range of the cooking_mode variable shall be [1..3]" : 
 			cooking_mode >= 1 and cooking_mode <= 3 and 								-- do we want to use raw integer values
 			cooking_mode >= defs.SETUP_MODE and cooking_mode <= defs.COOKING_MODE;	-- or constants from defs?
 		
+		-- #2
 		guarantee "The microwave shall be in cooking mode only when the door is closed." : 
 			is_cooking => door_closed;
 		
+		-- #3
 		-- encode this property using the defs.initially_true node.  
 		-- take a look at this definition: why does it encode something that 
 		-- is true in the initial instant?
 		guarantee "The microwave shall be in setup mode in the initial state." : 
+			-- TODO: explain why defs.initially_true works
 			defs.initially_true(is_setup); 
 
+		-- #4
 		-- A freebie		
 		guarantee "At the instant the microwave starts running, it shall be in the cooking mode if the door is closed" : 
 			(defs.rising_edge(is_running) and door_closed) => 
 				is_cooking;
 
+		-- #5
 		guarantee "At the instant the microwave starts running, it shall enter the suspended mode if the door is open" : 
 			(defs.rising_edge(is_running) and not door_closed) =>
 				is_suspended;
-			
+		
+		-- #6
 		guarantee "At the instant the clear button is pressed, if the microwave was cooking, then the microwave shall stop cooking" :
-			(defs.rising_edge(clear) and pre(is_cooking)) =>
+			(clear_pressed and pre(is_cooking)) =>
 				not is_cooking;
-			
+		
+		-- #7
 		guarantee "At the instant when the clear button is pressed, if the microwave is in suspended mode, it shall enter the setup mode" : 		
-			(defs.rising_edge(clear) and pre(is_suspended)) =>
+			(clear_pressed and pre(is_suspended)) =>
 				is_setup;
-			
+		
+		-- #8	
 		guarantee "If suspended, at the instant the start key is pressed the microwave shall enter cooking mode if the door is closed and the seconds_to_cook is greater than 0" :
-			true; 
-			
+			(pre(is_suspended) and start_pressed and not clear_pressed and door_closed and not door_just_closed and (seconds_to_cook > 0)) =>
+				is_cooking;
+		
+		-- #9
 		guarantee "If seconds_to_cook = 0, microwave will be in setup mode" : 
 			(seconds_to_cook = 0) =>
 				is_setup;
@@ -146,20 +174,27 @@ system Display_Control
 			kp_5_pressed or kp_6_pressed or kp_7_pressed or kp_8_pressed or
 			kp_9_pressed or kp_0_pressed ; 
 
+		-- #10
 		-- range guarantees:
 		guarantee "left_digit range shall be [0..9]" : 
-			true; 
+			left_digit >= 0 and left_digit <= 9;
+		
+		-- #11
 		guarantee "middle_digit range shall be [0..9]" :
 			true;
+		
+		-- #12
 		guarantee "right_digit_range shall be [0..9]" :
 			true;
 
+		-- #13
 		-- For the following property, the left-most digit corresponds to minutes (60 seconds), 
 		-- the middle digit is tens of seconds, and 
 		-- the right digit is seconds
 		guarantee "The seconds_to_cook shall match the total time of the displayed digits" : 
 			true;
-					
+		
+		-- #14
 		guarantee "If the keypad is enabled and the clear button is pressed, the steps to cook shall be zero" : 
 			true;
 		
@@ -167,11 +202,15 @@ system Display_Control
 		-- for the initial instant.  The form for this is: 
 		-- guarantee "foo" : true -> (<property that involves 'pre' operator>)
 		
+		-- #15
 		guarantee "If the display is quiescent (no buttons pressed) and the keypad is enabled, the seconds_to_cook shall not change." : 
 			true;
+		
+		-- #16
 		guarantee "Steps to cook shall be initially zero" : 
 			true; 
 
+		-- #17
 		-- This property could be tighted up significantly; we could mention it decreases by 1, but
 		-- this is not really necessary for the property. 
 		guarantee "While the microwave is in cooking mode, seconds_to_cook shall decrease" : 
@@ -250,6 +289,8 @@ system Output_Processing
 		cooking_mode: in data port Base_Types::Integer;
 		heating_element_on : out data port Base_Types::Boolean;  
 	annex agree {**
+		
+		-- #18
 		-- freebie
 		guarantee "heating_element_on is equivalent to cooking_mode being 'cooking'" : 
 			heating_element_on = (defs.is_cooking(cooking_mode));
@@ -279,12 +320,15 @@ system Microwave_Control
 					
 	annex agree {** 
 		
+		-- #19
 		guarantee "heating_element_on implies door_closed_sensor" : 
 			true ;  
 		
+		-- #20
 		guarantee "heating element on implies time to cook decreases" : 
 			true; 
-					
+		
+		-- #21		
 		guarantee "time to cook = 0 implies heating_element_off" : 
 			true; 
 		
