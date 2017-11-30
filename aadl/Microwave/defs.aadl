@@ -25,6 +25,11 @@ annex agree {**
 		re = (signal and not prev(signal, false));
 	tel;
 	
+	node falling_edge(signal: bool) returns (re: bool);
+	let 
+		re = (not signal and prev(signal, false));
+	tel;
+	
 	node timer(set: bool, reset: bool) returns (time_val: int);
 	let
 		time_val = 
