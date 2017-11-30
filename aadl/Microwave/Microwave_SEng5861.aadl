@@ -215,7 +215,7 @@ system Display_Control
 		-- This property could be tighted up significantly; we could mention it decreases by 1, but
 		-- this is not really necessary for the property. 
 		guarantee "While the microwave is in cooking mode, seconds_to_cook shall decrease" : 
-			true -> pre(defs.is_cooking(cooking_mode)) => (seconds_to_cook < pre(seconds_to_cook));
+			(pre(seconds_to_cook > 0) and defs.is_cooking(cooking_mode)) => (seconds_to_cook < pre(seconds_to_cook));
 				    
 		
 	**};	
