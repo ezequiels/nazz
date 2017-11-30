@@ -18,33 +18,13 @@ system Mode_Control
 		eq is_suspended : bool = defs.is_suspended(cooking_mode);
 		eq is_running : bool = defs.is_running(cooking_mode);
 		
-		eq start_pressed : bool = defs.rising_edge(start);
-		eq clear_pressed : bool = defs.rising_edge(clear);
-		
-		eq entered_cooking : bool = defs.rising_edge(is_cooking);
-		eq entered_setup : bool = defs.rising_edge(is_setup);
-		eq entered_suspended : bool = defs.rising_edge(is_suspended);
-		eq entered_running : bool = defs.rising_edge(is_running);
-		
-		eq left_cooking : bool = defs.falling_edge(is_cooking);
-		eq left_setup : bool = defs.falling_edge(is_setup);
-		eq left_suspended : bool = defs.falling_edge(is_suspended);
-		eq left_running : bool = defs.falling_edge(is_running);
-		
-		eq door_just_closed : bool = defs.rising_edge(door_closed);
-		eq door_just_opened : bool = defs.falling_edge(door_closed);
-		
-		eq clock : int = prev(clock, 0) + 1;
-		
 		-- A freebie.
 		assume "seconds_to_cook is greater than or equal to zero" : 
 			seconds_to_cook >= 0; 
 
 		-- #1
 		guarantee "The range of the cooking_mode variable shall be [1..3]" : 
-			cooking_mode >= 1 and cooking_mode <= 3 and 								-- do we want to use raw integer values
-			cooking_mode >= defs.SETUP_MODE and cooking_mode <= defs.COOKING_MODE;	-- or constants from defs?
-		    0 < cooking_mode and cooking_mode < 4;
+			cooking_mode > 0 and cooking_mode < 4;
 
 		-- #2
 		guarantee "The microwave shall be in cooking mode only when the door is closed." : 
@@ -71,17 +51,19 @@ system Mode_Control
 		
 		-- #6
 		guarantee "At the instant the clear button is pressed, if the microwave was cooking, then the microwave shall stop cooking" :
-			(clear_pressed and pre(is_cooking)) =>
+			(defs.rising_edge(clear) and pre(is_cooking)) =>
 				not is_cooking;
 		
 		-- #7
 		guarantee "At the instant when the clear button is pressed, if the microwave is in suspended mode, it shall enter the setup mode" : 		
-			(clear_pressed and pre(is_suspended)) =>
+			(defs.rising_edge(clear) and pre(is_suspended)) =>
 				is_setup;
 		
 		-- #8	
 		guarantee "If suspended, at the instant the start key is pressed the microwave shall enter cooking mode if the door is closed and the seconds_to_cook is greater than 0" :
-			(pre(is_suspended) and start_pressed and not clear_pressed and door_closed and not door_just_closed and (seconds_to_cook > 0)) =>
+			--(pre(is_suspended) and start_pressed and not clear_pressed and door_closed and not door_just_closed and (seconds_to_cook > 0)) =>
+			--	is_cooking;
+			(pre(is_suspended) and defs.rising_edge(start) and not defs.rising_edge(clear) and door_closed and prev(door_closed, false) and (seconds_to_cook > 0)) =>
 				is_cooking;
 		
 		-- #9
