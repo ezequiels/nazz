@@ -61,9 +61,7 @@ system Mode_Control
 		
 		-- #8	
 		guarantee "If suspended, at the instant the start key is pressed the microwave shall enter cooking mode if the door is closed and the seconds_to_cook is greater than 0" :
-			--(pre(is_suspended) and start_pressed and not clear_pressed and door_closed and not door_just_closed and (seconds_to_cook > 0)) =>
-			--	is_cooking;
-			(pre(is_suspended) and defs.rising_edge(start) and not defs.rising_edge(clear) and door_closed and prev(door_closed, false) and (seconds_to_cook > 0)) =>
+			(pre(is_suspended) and defs.rising_edge(start) and door_closed and prev(door_closed, false) and (seconds_to_cook > 0)) =>
 				is_cooking;
 		
 		-- #9
