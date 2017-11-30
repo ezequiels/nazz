@@ -44,7 +44,8 @@ system Mode_Control
 		guarantee "The range of the cooking_mode variable shall be [1..3]" : 
 			cooking_mode >= 1 and cooking_mode <= 3 and 								-- do we want to use raw integer values
 			cooking_mode >= defs.SETUP_MODE and cooking_mode <= defs.COOKING_MODE;	-- or constants from defs?
-		
+		    0 < cooking_mode and cooking_mode < 4;
+
 		-- #2
 		guarantee "The microwave shall be in cooking mode only when the door is closed." : 
 			is_cooking => door_closed;
@@ -181,22 +182,22 @@ system Display_Control
 		
 		-- #11
 		guarantee "middle_digit range shall be [0..9]" :
-			true;
+			middle_digit > -1 and middle_digit < 10;
 		
 		-- #12
 		guarantee "right_digit_range shall be [0..9]" :
-			true;
+			right_digit > -1 and right_digit < 10;
 
 		-- #13
 		-- For the following property, the left-most digit corresponds to minutes (60 seconds), 
 		-- the middle digit is tens of seconds, and 
 		-- the right digit is seconds
 		guarantee "The seconds_to_cook shall match the total time of the displayed digits" : 
-			true;
+			seconds_to_cook = left_digit * 60 + middle_digit * 10 + right_digit;
 		
 		-- #14
 		guarantee "If the keypad is enabled and the clear button is pressed, the steps to cook shall be zero" : 
-			true;
+			(keypad_enabled and clear_pressed) => seconds_to_cook = 0;
 		
 		-- some of the state change properties, such as the one below, must just be set to true 
 		-- for the initial instant.  The form for this is: 
@@ -204,17 +205,17 @@ system Display_Control
 		
 		-- #15
 		guarantee "If the display is quiescent (no buttons pressed) and the keypad is enabled, the seconds_to_cook shall not change." : 
-			true;
+			(not(any_digit_pressed or clear_pressed) and keypad_enabled) => pre(seconds_to_cook) = seconds_to_cook;
 		
 		-- #16
 		guarantee "Steps to cook shall be initially zero" : 
-			true; 
+			defs.initially_true(seconds_to_cook = 0);
 
 		-- #17
 		-- This property could be tighted up significantly; we could mention it decreases by 1, but
 		-- this is not really necessary for the property. 
 		guarantee "While the microwave is in cooking mode, seconds_to_cook shall decrease" : 
-			true;
+			true -> pre(defs.is_cooking(cooking_mode)) => (seconds_to_cook < pre(seconds_to_cook));
 				    
 		
 	**};	
