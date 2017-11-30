@@ -187,11 +187,7 @@ system Display_Control
 		
 		-- #15
 		guarantee "If the display is quiescent (no buttons pressed) and the keypad is enabled, the seconds_to_cook shall not change." : 
-<<<<<<< HEAD
 			true->(not(any_digit_pressed or clear_pressed) and keypad_enabled) => pre(seconds_to_cook) = seconds_to_cook;
-=======
-			true -> (not(any_digit_pressed or clear_pressed) and keypad_enabled) => pre(seconds_to_cook) = seconds_to_cook;
->>>>>>> 156a2755292706bea6e06f1159f8417883f37710
 		
 		-- #16
 		guarantee "Steps to cook shall be initially zero" : 
