@@ -187,7 +187,7 @@ system Display_Control
 		
 		-- #15
 		guarantee "If the display is quiescent (no buttons pressed) and the keypad is enabled, the seconds_to_cook shall not change." : 
-			(not(any_digit_pressed or clear_pressed) and keypad_enabled) => pre(seconds_to_cook) = seconds_to_cook;
+			true->(not(any_digit_pressed or clear_pressed) and keypad_enabled) => pre(seconds_to_cook) = seconds_to_cook;
 		
 		-- #16
 		guarantee "Steps to cook shall be initially zero" : 
@@ -197,7 +197,7 @@ system Display_Control
 		-- This property could be tighted up significantly; we could mention it decreases by 1, but
 		-- this is not really necessary for the property. 
 		guarantee "While the microwave is in cooking mode, seconds_to_cook shall decrease" : 
-			true -> pre(defs.is_cooking(cooking_mode)) => (seconds_to_cook < pre(seconds_to_cook));
+			(pre(seconds_to_cook > 0) and defs.is_cooking(cooking_mode)) => (seconds_to_cook < pre(seconds_to_cook));
 				    
 		
 	**};	
@@ -296,12 +296,16 @@ system Microwave_Control
 		kp_9: in data port Base_Types::Boolean; 
 		door_closed: in data port Base_Types::Boolean;
 		
+		
 		heating_element_on: out data port Base_Types::Boolean;
 		left_digit : out data port Base_Types::Integer;
 		middle_digit : out data port Base_Types::Integer;
 		right_digit : out data port Base_Types::Integer; 
+		
+		
 					
 	annex agree {** 
+		eq seconds_to_cook: int = left_digit * 60 + middle_digit * 10 + right_digit;
 		
 		-- #19
 		guarantee "heating_element_on implies door_closed_sensor" : 
@@ -309,7 +313,7 @@ system Microwave_Control
 		
 		-- #20
 		guarantee "heating element on implies time to cook decreases" : 
-			true; 
+			 true -> pre(heating_element_on) => ((seconds_to_cook) < pre(seconds_to_cook)); 
 		
 		-- #21		
 		guarantee "time to cook = 0 implies heating_element_off" : 
