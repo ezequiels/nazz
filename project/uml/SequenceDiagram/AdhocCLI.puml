@@ -1,5 +1,7 @@
 @startuml
 
+skinparam backgroundcolor transparent
+
 title Ansible Adhoc CLI
 actor User
 User->ansible: main

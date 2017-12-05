@@ -1,5 +1,9 @@
 @startuml
+skinparam backgroundcolor transparent
 
+skinparam package {
+    backgroundcolor transparent
+}
 package "ControlMachine" {
 
     commandLine - [CLI]
@@ -13,6 +17,7 @@ package "ControlMachine" {
 }
 
 package "RemoteMachine (1..*)" {
+
     protocol <-> [Module]
 
     [Transport] ---> protocol : {module}\n<<file>>
