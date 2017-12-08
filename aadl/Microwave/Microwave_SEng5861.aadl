@@ -41,7 +41,7 @@ system Mode_Control
 			-- So, if value_to_check was initially true, then this prev statement will be true for all
 			-- states in the execution space. If value_to_check was initially false, then this prev
 			-- statement will be true for all states _except_ the first state, causing the guarantee
-			-- to fail.
+			-- to fail. In this way, initially_true depends wholly on the value of value_to_check.
 			defs.initially_true(is_setup); 
 
 		-- #4
