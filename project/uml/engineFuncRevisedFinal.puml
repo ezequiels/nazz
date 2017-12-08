@@ -1,0 +1,80 @@
+@startuml
+
+
+package "Utilities Layer" {
+
+    interface Connection
+    Connection : execute_command()
+    Connection : put_file()
+    Connection : fetch_file()
+    Connection : close()
+}
+
+Package "CLI Layer" {
+    class PlaybookCLI
+}
+
+note as n1
+Inventory
+
+  (YAML)
+end note
+
+n1..> PlaybookCLI
+
+note as n2
+PlaybookImplementation
+
+  (YAML)
+end note
+
+n2..> PlaybookCLI
+
+
+Package "Domain Layer" {
+
+    class PlaybookImplementation
+    PlaybookImplementation : List<Host>
+'    PlaybookImplementation -> PlayImplementation : run(host)
+    PlaybookCLI --> PlaybookImplementation : run()
+
+    class PlayImplementation
+'    PlayImplementation -> TaskImplementation : run()
+
+    class TaskImplementation
+'    TaskImplementation -> ActionImplementation : run()
+
+    class ActionImplementation
+'    ActionImplementation : run()
+    ActionImplementation ---> Connection : put_file()
+    ActionImplementation --> Connection : execute_command()
+    ActionImplementation <.. Connection : response
+}
+
+Package "Engine Layer" {
+
+    interface PlaybookExecutionStrategy
+'    PlaybookExecutor : run()
+        PlaybookImplementation --> PlaybookExecutionStrategy : run(host)
+        PlaybookExecutionStrategy --> PlayImplementation : run(host)
+
+    interface PlayExecutionStrategy
+        PlayImplementation --> PlayExecutionStrategy : run()
+        PlayExecutionStrategy --> TaskImplementation : run()
+'        TaskQueueManager <.. TaskImplementation : result
+
+'    class ConcurrencyStrategy
+'    StrategyBase : run(PlayIterator, PlayContext)
+'    StrategyBase -> WorkerProcess : run()
+'    StrategyBase <. WorkerProcess : result
+
+    interface TaskExecutionStrategy
+        TaskImplementation --> TaskExecutionStrategy : run()
+        TaskExecutionStrategy --> ActionImplementation : run()
+'    TaskExecutor : host
+'    TaskExecutor -> ActionBase : run()
+'    TaskExecutor <.. ActionBase : data
+
+}
+
+@enduml

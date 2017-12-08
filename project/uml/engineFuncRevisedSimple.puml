@@ -1,0 +1,52 @@
+@startuml
+
+
+package "Utilities Layer" {
+
+    interface Connection
+    Connection : execute_command()
+    Connection : put_file()
+    Connection : fetch_file()
+    Connection : close()
+}
+
+Package "CLI Layer" {
+    class PlaybookCLI
+}
+
+note as n1
+Inventory
+
+  (YAML)
+end note
+
+n1..> PlaybookCLI
+
+note as n2
+Playbook
+
+  (YAML)
+end note
+
+n2..> PlaybookCLI
+
+
+Package "Domain Layer"{
+
+    interface Playbook
+    Playbook -> Play : run(host)
+    PlaybookCLI --> Playbook : run()
+
+    interface Play
+    Play -> Task : run()
+
+    interface Task
+    Task -> Action : run()
+
+    interface Action
+    Action --> Connection : put_file()
+    Action --> Connection : execute_command()
+    Action <.. Connection : response
+}
+
+@enduml
