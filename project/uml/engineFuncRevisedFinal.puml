@@ -1,9 +1,10 @@
 @startuml
 
+skinparam backgroundcolor transparent
 
 package "Utilities Layer" {
 
-    interface Connection
+    abstract Connection
     Connection : execute_command()
     Connection : put_file()
     Connection : fetch_file()
@@ -51,14 +52,14 @@ Package "Domain Layer" {
     ActionImplementation <.. Connection : response
 }
 
-Package "Engine Layer" {
+Package "Infrastructure Layer" {
 
-    interface PlaybookExecutionStrategy
+    abstract PlaybookExecutionStrategy
 '    PlaybookExecutor : run()
         PlaybookImplementation --> PlaybookExecutionStrategy : run(host)
         PlaybookExecutionStrategy --> PlayImplementation : run(host)
 
-    interface PlayExecutionStrategy
+    abstract PlayExecutionStrategy
         PlayImplementation --> PlayExecutionStrategy : run()
         PlayExecutionStrategy --> TaskImplementation : run()
 '        TaskQueueManager <.. TaskImplementation : result
@@ -68,7 +69,7 @@ Package "Engine Layer" {
 '    StrategyBase -> WorkerProcess : run()
 '    StrategyBase <. WorkerProcess : result
 
-    interface TaskExecutionStrategy
+    abstract TaskExecutionStrategy
         TaskImplementation --> TaskExecutionStrategy : run()
         TaskExecutionStrategy --> ActionImplementation : run()
 '    TaskExecutor : host

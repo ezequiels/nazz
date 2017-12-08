@@ -1,9 +1,10 @@
 @startuml
 
+skinparam backgroundcolor transparent
 
 package "Utilities Layer" {
 
-    interface Connection
+    abstract Connection
     Connection : execute_command()
     Connection : put_file()
     Connection : fetch_file()
@@ -31,19 +32,19 @@ end note
 n2..> PlaybookCLI
 
 
-Package "Domain Layer"{
+Package "Infrastructure Layer"{
 
-    interface Playbook
+    abstract Playbook
     Playbook -> Play : run(host)
     PlaybookCLI --> Playbook : run()
 
-    interface Play
+    abstract Play
     Play -> Task : run()
 
-    interface Task
+    abstract Task
     Task -> Action : run()
 
-    interface Action
+    abstract Action
     Action --> Connection : put_file()
     Action --> Connection : execute_command()
     Action <.. Connection : response

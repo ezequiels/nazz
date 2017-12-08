@@ -1,9 +1,10 @@
 @startuml
 
+skinparam backgroundcolor transparent
 
 package "Utilities Layer" {
 
-    interface Connection
+    abstract Connection
     Connection : execute_command()
     Connection : put_file()
     Connection : fetch_file()
@@ -51,7 +52,7 @@ Package "Domain Layer" {
     ActionImplementation <.. Connection : response
 }
 
-Package "Engine Layer" {
+Package "Infrastructure Layer" {
 
     class PlaybookExecutor
 '    PlaybookExecutor : run()
