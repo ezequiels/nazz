@@ -1,0 +1,76 @@
+@startuml
+
+
+package "Utilities Layer" {
+
+    abstract Connection
+    Connection : execute_command()
+    Connection : put_file()
+    Connection : fetch_file()
+    Connection : close()
+}
+
+Package "CLI Layer" {
+    class PlaybookCLI
+}
+
+note as n1
+Inventory
+
+  (YAML)
+end note
+
+n1..> PlaybookCLI
+
+note as n2
+Playbook
+
+  (YAML)
+end note
+
+n2..> PlaybookCLI
+
+
+Package "Domain Layer"{
+
+    abstract Playbook
+    Playbook : run()
+    Playbook *- "*" Play
+    PlaybookCLI *-- Playbook : "*"
+
+    abstract Play
+    Play : run(host)
+    Play *- "*" Task
+
+    abstract Host
+    Host "*" -* Playbook
+
+    abstract Task
+    Task : run()
+    Task *- Action
+
+    abstract Action
+    Action : run()
+    Action *--- Connection
+}
+
+Package "Engine Layer" {
+
+    abstract PlaybookExecutionStrategy
+        PlaybookExecutionStrategy : run()
+        Playbook *-- PlaybookExecutionStrategy
+
+    abstract PlayExecutionStrategy
+        PlayExecutionStrategy : run()
+        Play *-- PlayExecutionStrategy
+
+    abstract ConcurrencyStrategy
+        PlayExecutionStrategy *- ConcurrencyStrategy
+
+    abstract TaskExecutionStrategy
+        TaskExecutionStrategy : run()
+        Task *-- TaskExecutionStrategy
+
+}
+
+@enduml
