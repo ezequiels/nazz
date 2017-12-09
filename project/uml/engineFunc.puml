@@ -1,5 +1,6 @@
 @startuml
 
+skinparam backgroundcolor transparent
 
 package Transport {
 

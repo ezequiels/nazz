@@ -1,5 +1,7 @@
 @startuml
 
+skinparam backgroundcolor transparent
+
 package Transport {
     class Connection
     Connection : execute_command()

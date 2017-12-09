@@ -14,15 +14,15 @@ loop for all plays
     AdhocCLI->TaskQueueManager:run(play)
     TaskQueueManager->StrategyBase: run()
     StrategyBase->WorkerProcess: start()
-    WorkerProcess->TaskExecuter: run()
-    TaskExecuter->ActionBase: execute_module()
+    WorkerProcess->TaskExecutor: run()
+    TaskExecutor->ActionBase: execute_module()
     ActionBase -> Connection: exec_command()
     entity RemoteMachine
     Connection->RemoteMachine:run module remotely
     Connection <-- RemoteMachine: return response
     ActionBase <-- Connection: return response
-    ActionBase-->TaskExecuter: return data
-    TaskExecuter-->WorkerProcess: return result
+    ActionBase-->TaskExecutor: return data
+    TaskExecutor-->WorkerProcess: return result
     WorkerProcess <- WorkerProcess: put result in queue
     StrategyBase->StrategyBase:process_results()
     StrategyBase-->TaskQueueManager: return result

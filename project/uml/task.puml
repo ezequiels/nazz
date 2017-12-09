@@ -1,5 +1,7 @@
 @startuml
 
+skinparam backgroundcolor transparent
+
 class BaseMeta <<metaclass>>
 BaseMeta <.. Base : <<instance of>>
 Base <|-- PlayContext

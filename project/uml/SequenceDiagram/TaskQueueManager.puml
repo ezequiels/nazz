@@ -1,4 +1,6 @@
 @startuml
+skinparam backgroundcolor transparent
+
 participant TaskQueueManager
 create StrategyBase
 TaskQueueManager->StrategyBase: init() via loader
