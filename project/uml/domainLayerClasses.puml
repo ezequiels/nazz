@@ -1,0 +1,39 @@
+@startuml
+
+
+Package "Domain Layer"{
+
+    Package "Processes" {
+        abstract Playbook
+        Playbook : PlaybookExecutionStrategy
+        Playbook : run()
+        Playbook *- "*" Play
+
+        abstract Play
+        Play : PlayExecutionStrategy
+        Play : run(host)
+        Play *- "*" Task
+
+        abstract Task
+        Task : TaskExecutionStrategy
+        Task : run()
+        Task *- Action
+
+        abstract Action
+        Action : Connection
+        Action : run()
+    }
+
+    Package "Resources" {
+        abstract Host
+
+        abstract Group
+        Group "*" -* Playbook
+
+        abstract Inventory
+        Group *-- "*" Host
+        Inventory *- "*" Group
+    }
+}
+
+@enduml
