@@ -11,13 +11,18 @@ AnsibleError <|-- AnsibleRuntimeError
 AnsibleError <|--  AnsibleParserError
 AnsibleError <|-- AnsibleInternalError
 AnsibleRuntimeError <|--- AnsibleModuleError
-AnsibleRuntimeError <|-- AnsibleConnectionFailure
+class AnsibleConnectionFailureError #greenyellow
+AnsibleRuntimeError <|-- AnsibleConnectionFailureError
 AnsibleRuntimeError <|--- AnsibleFilterError
 AnsibleRuntimeError <|-- AnsibleLookupError
 AnsibleRuntimeError <|--- AnsibleCallbackError
+class AnsibleUndefinedVariable #greenyellow
 AnsibleRuntimeError <|-- AnsibleUndefinedVariable
-AnsibleRuntimeError <|--- AnsibleFileNotFound
-AnsibleRuntimeError <|-- AnsibleActionSkip
-AnsibleRuntimeError <|--- AnsibleActionFail
+class AnsibleFileNotFoundError #greenyellow
+AnsibleRuntimeError <|--- AnsibleFileNotFoundError
+class AnsibleActionSkipError #greenyellow
+AnsibleRuntimeError <|-- AnsibleActionSkipError
+class AnsibleActionFailError #greenyellow
+AnsibleRuntimeError <|--- AnsibleActionFailError
 
 @enduml
