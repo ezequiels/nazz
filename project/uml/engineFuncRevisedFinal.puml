@@ -43,13 +43,13 @@ Package "Domain Layer" {
 '    PlayImplementation -> TaskImplementation : run()
 
     class TaskImplementation
-'    TaskImplementation -> ActionImplementation : run()
+'    TaskImplementation -> Action : run()
 
-    class ActionImplementation
-'    ActionImplementation : run()
-    ActionImplementation ---> Connection : put_file()
-    ActionImplementation --> Connection : execute_command()
-    ActionImplementation <.. Connection : response
+    abstract Action
+'    Action : run()
+    Action ---> Connection : put_file()
+    Action --> Connection : execute_command()
+    Action <.. Connection : response
 }
 
 Package "Infrastructure Layer" {
@@ -71,7 +71,7 @@ Package "Infrastructure Layer" {
 
     abstract TaskExecutionStrategy
         TaskImplementation --> TaskExecutionStrategy : run()
-        TaskExecutionStrategy --> ActionImplementation : run()
+        TaskExecutionStrategy --> Action : run()
 '    TaskExecutor : host
 '    TaskExecutor -> ActionBase : run()
 '    TaskExecutor <.. ActionBase : data
