@@ -1,0 +1,47 @@
+@startuml
+
+
+package "Ansible" {
+top to bottom direction
+
+    package "UI" {
+        [CLI]
+    }
+
+    package "Domain"{
+        [Processes]
+        [Resources]
+    }
+    component [Resources] #GreenYellow
+    component [Processes] #GreenYellow
+
+
+    package "Infrastructure" {
+        [Engine]
+    }
+
+    package "Utilities" as utilities{
+        [Parsers]
+        [Transport]
+        [Configuration]
+        [Loaders]
+    }
+
+    package "Extensions" as extensions {
+        [Modules]
+        [Plugins]
+    }
+
+    [CLI] --> [Processes]
+    [Processes] <-> [Resources]
+    [CLI] <----> [Configuration]
+    [Processes] <---> [Engine]
+    [Engine] <---> [Transport]
+    [Engine] <----> [Modules]
+    [Configuration] <-> [Parsers]
+
+
+    note bottom of Loaders: <b>Loaders</b> and <b>Plugins</b> are used almost everywhere
+}
+
+@enduml

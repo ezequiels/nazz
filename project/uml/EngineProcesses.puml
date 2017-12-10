@@ -1,0 +1,34 @@
+@startuml
+
+participant Playbook #GreenYellow
+participant PlaybookExecutionStrategy #GreenYellow
+participant Play #GreenYellow
+participant PlayExecutionStrategy #GreenYellow
+participant Task #GreenYellow
+participant TaskExecutionStrategy #GreenYellow
+
+
+Playbook -> PlaybookExecutionStrategy: run(host)
+
+loop for each play in playbook
+PlaybookExecutionStrategy -> Play: run(host)
+Play -> PlayExecutionStrategy: run()
+
+loop for each task in play
+PlayExecutionStrategy -> Task: run(host)
+Task -> TaskExecutionStrategy: run()
+...
+Task <-- TaskExecutionStrategy: result
+PlayExecutionStrategy <-- Task: result
+end
+
+Play <-- PlayExecutionStrategy: result
+PlaybookExecutionStrategy <-- Play: result
+end
+
+Playbook <-- PlaybookExecutionStrategy: result
+
+
+
+@enduml
+
