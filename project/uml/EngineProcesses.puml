@@ -6,6 +6,7 @@ participant Play #GreenYellow
 participant PlayExecutionStrategy #GreenYellow
 participant Task #GreenYellow
 participant TaskExecutionStrategy #GreenYellow
+participant Action #GreenYellow
 
 
 Playbook -> PlaybookExecutionStrategy: run(host)
@@ -17,7 +18,9 @@ Play -> PlayExecutionStrategy: run()
 loop for each task in play
 PlayExecutionStrategy -> Task: run(host)
 Task -> TaskExecutionStrategy: run()
+TaskExecutionStrategy -> Action: run()
 ...
+Action --> TaskExecutionStrategy: result
 Task <-- TaskExecutionStrategy: result
 PlayExecutionStrategy <-- Task: result
 end
