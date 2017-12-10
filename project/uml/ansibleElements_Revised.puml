@@ -41,7 +41,8 @@ top to bottom direction
     [Configuration] <-> [Parsers]
 
 
-    note bottom of Loaders: <b>Loaders</b> and <b>Plugins</b> are used almost everywhere
+    note bottom of Loaders: <b>Loaders</b>  are used almost everywhere
+    note bottom of Plugins: <b>Plugins</b> are used almost everywhere
 }
 
 @enduml

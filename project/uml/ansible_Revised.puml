@@ -12,7 +12,7 @@ package "ControlMachine" {
     [CLI] --> [Processes] : {VariableManager, \nDataLoader, \noptions, \npasswords}
     [Processes] ..> CLI : {results}
     [Processes] -> [Resources]
-    [Processes] <. [Resources] : {Inventory Manager}
+    [Processes] <. [Resources] : {hosts}
 
     [Processes] --> [Engine] : {InventoryManager, \nVariableManager, \nDataLoader, \noptions, \npasswords}
     [Engine] ..> Processes : {results}
