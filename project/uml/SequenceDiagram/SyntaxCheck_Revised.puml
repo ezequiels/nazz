@@ -1,0 +1,18 @@
+@startuml
+actor User
+User->ansible: ansible-playbook --syntax-check
+ansible->PlaybookCLI: run()
+participant Playbook #GreenYellow
+participant PlaybookExecutionStrategy #GreenYellow
+participant Play #GreenYellow
+PlaybookCLI->Playbook:run()
+Playbook->PlaybookExecutionStrategy:run()
+loop for all plays
+    PlaybookExecutionStrategy->Play: post_validate()
+    Play-->PlaybookExecutionStrategy: return bool
+end
+PlaybookExecutionStrategy --> Playbook: result
+Playbook-->PlaybookCLI: return result
+PlaybookCLI-->ansible: return result
+ansible-->User: return
+@enduml

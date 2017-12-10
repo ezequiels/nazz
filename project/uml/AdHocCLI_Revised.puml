@@ -1,0 +1,16 @@
+@startuml
+
+
+participant AdHocCLI
+participant Playbook #GreenYellow
+
+create Playbook
+AdHocCLI -> Playbook: init(variable_manager, loader, options, passwords, stdout_callback, run_additional_callbacks, run_tree)
+AdHocCLI -> Playbook: run(playbook)
+...
+Playbook --> AdHocCLI: result
+
+
+
+@enduml
+

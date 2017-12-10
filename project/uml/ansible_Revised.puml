@@ -1,0 +1,38 @@
+@startuml
+'skinparam backgroundcolor transparent
+
+skinparam package {
+    backgroundcolor transparent
+}
+
+
+package "ControlMachine" {
+
+    commandLine - [CLI]
+    [CLI] --> [Processes] : {VariableManager, \nDataLoader, \noptions, \npasswords}
+    [Processes] ..> CLI : {results}
+    [Processes] -> [Resources]
+    [Processes] <. [Resources] : {Inventory Manager}
+
+    [Processes] --> [Engine] : {InventoryManager, \nVariableManager, \nDataLoader, \noptions, \npasswords}
+    [Engine] ..> Processes : {results}
+
+    [Transport] .> [Engine] : {results}
+    [Engine] --> [Transport] : {actionHandler}
+
+    [CLI] - [Configuration]
+}
+
+ component [Resources] #GreenYellow
+ component [Processes] #GreenYellow
+
+package "RemoteMachine (1..*)" {
+
+    protocol <-> [Module]
+
+    [Transport] ---> protocol : {module}\n<<file>>
+    [Transport] ---> protocol : {shell command}\n<<bytes>>
+    protocol ...> [Transport] : {results}\n<<JSON>>
+}
+
+@enduml

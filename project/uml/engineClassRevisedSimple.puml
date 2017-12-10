@@ -54,7 +54,7 @@ Package "Domain Layer"{
     Action *--- Connection
 }
 
-Package "Engine Layer" {
+Package "Infrastructure Layer" {
 
     abstract PlaybookExecutionStrategy
         PlaybookExecutionStrategy : run()

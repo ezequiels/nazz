@@ -1,0 +1,30 @@
+@startuml
+actor User
+User->ansible:ansible-playbook --check
+ansible->PlaybookCLI: run()
+participant InventoryManager
+participant Playbook #GreenYellow
+PlaybookCLI->Playbook:init(..)
+Playbook->InventoryManager: list_hosts()
+Playbook<--InventoryManager: return hosts
+participant PlaybookExecutionStrategy #GreenYellow
+PlaybookCLI->Playbook:run(playbook)
+Playbook->PlaybookExecutionStrategy:run()
+
+participant Play #GreenYellow
+loop for all plays
+    PlaybookExecutionStrategy->Play:run(host)
+    entity RemoteMachine
+    note right: Abstraction alert: \nThe Play \ndoesn't talk to the remote \nmachine directly by a long \nshot.
+    Play->RemoteMachine
+    RemoteMachine-->Play: return result
+    Play-->PlaybookExecutionStrategy: return result
+end
+PlaybookExecutionStrategy-->Playbook: return result
+Playbook->InventoryManager: unreachable_hosts()
+InventoryManager-->Playbook: return unreachable_hosts
+Playbook->PlaybookCLI: return result
+PlaybookCLI-->ansible: return result
+ansible-->User: return
+
+@enduml

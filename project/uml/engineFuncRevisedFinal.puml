@@ -1,6 +1,6 @@
 @startuml
 
-skinparam backgroundcolor transparent
+'skinparam backgroundcolor transparent
 
 package "Utilities Layer" {
 
