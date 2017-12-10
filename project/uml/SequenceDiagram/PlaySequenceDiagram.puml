@@ -1,0 +1,35 @@
+@startuml
+'skinparam backgroundcolor transparent
+
+participant Play #greenyellow
+participant PlayExecutionStrategy #greenyellow
+Play -> PlayExecutionStrategy: run()
+participant PlayExecutionStrategy
+participant ConcurrencyStrategy #greenyellow
+PlayExecutionStrategy->ConcurrencyStrategy: run()
+create WorkerProcess
+ConcurrencyStrategy->WorkerProcess: init()
+ConcurrencyStrategy->WorkerProcess: run()
+note left: Abstraction alert: ConcurrencyStrategy grabs \na WorkerProcess from a thread pool
+create participant Task #greenyellow
+WorkerProcess->Task: init()
+WorkerProcess->Task: run()
+participant Action #greenyellow
+create Connection
+Task->Connection: init() via loader
+create Action
+Task->Action: init() via loader
+Task->Action: run()
+Action -> Connection: exec_command()
+entity RemoteMachine
+Connection->RemoteMachine:run module remotely
+Connection <-- RemoteMachine: return response
+Action <-- Connection: return response
+Action-->Task: return data
+Task-->WorkerProcess: return result
+destroy Task
+WorkerProcess-->ConcurrencyStrategy: return result
+note right: Abstraction alert: The WorkerProcess result \nactually returns via the thread pool
+ConcurrencyStrategy-->PlayExecutionStrategy: return result
+PlayExecutionStrategy --> Play: return result
+@enduml

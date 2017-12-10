@@ -73,4 +73,9 @@ Package "Infrastructure Layer" {
 
 }
 
+Package "Extensibility Layer" {
+    class ActionImplementation
+    Action <|---- ActionImplementation
+}
+
 @enduml
