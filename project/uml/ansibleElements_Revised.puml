@@ -32,9 +32,10 @@ top to bottom direction
         [Plugins]
     }
 
+    [CLI] --> [Resources]
     [CLI] --> [Processes]
     [Processes] <-> [Resources]
-    [CLI] <----> [Configuration]
+    [Resources] <----> [Configuration]
     [Processes] <---> [Engine]
     [Engine] <---> [Transport]
     [Engine] <----> [Modules]
