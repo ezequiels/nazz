@@ -1,35 +1,49 @@
 @startuml
 
-skinparam backgroundcolor transparent
+'skinparam backgroundcolor transparent
 
 title Ansible Adhoc CLI
 actor User
 User->ansible: main
 ansible->AdhocCLI: run()
-AdhocCLI->InventoryManager: list_hosts()
-InventoryManager-->AdhocCLI: hostnames
-AdhocCLI->Play: get_plays()
-Play-->AdhocCLI: return plays
+
+participant Inventory #GreenYellow
+participant Playbook #GreenYellow
+AdhocCLI->Playbook: run()
+
+Playbook->Inventory: list_hostgroup()
+Inventory-->Playbook: return hostgroup
+
+participant Play #GreenYellow
+participant PlayExecutionStrategy #GreenYellow
+participant ConcurrencyStrategy #GreenYellow
+
+
 loop for all plays
-    AdhocCLI->TaskQueueManager:run(play)
-    TaskQueueManager->StrategyBase: run()
-    StrategyBase->WorkerProcess: start()
-    WorkerProcess->TaskExecutor: run()
-    TaskExecutor->ActionBase: execute_module()
-    ActionBase -> Connection: exec_command()
+    Playbook -> Play:run(play)
+    Play -> PlayExecutionStrategy: run()
+    PlayExecutionStrategy -> ConcurrencyStrategy: run()
+    ConcurrencyStrategy -> WorkerProcess: run()
+
+    participant Task #GreenYellow
+    participant Action #GreenYellow
+
+    WorkerProcess -> Task: run()
+    Task -> Action: run()
+    Action -> Connection: exec_command()
     entity RemoteMachine
-    Connection->RemoteMachine:run module remotely
+    Connection -> RemoteMachine:run module remotely
     Connection <-- RemoteMachine: return response
-    ActionBase <-- Connection: return response
-    ActionBase-->TaskExecutor: return data
-    TaskExecutor-->WorkerProcess: return result
-    WorkerProcess <- WorkerProcess: put result in queue
-    StrategyBase->StrategyBase:process_results()
-    StrategyBase-->TaskQueueManager: return result
-    TaskQueueManager-> StrategyBase: cleanup()
-    TaskQueueManager-->AdhocCLI: return play_return
+    Action <-- Connection: return response
+    Action --> Task: return data
+    Task --> WorkerProcess: return result
+    WorkerProcess --> ConcurrencyStrategy: return result
+    ConcurrencyStrategy --> PlayExecutionStrategy: return result
+    PlayExecutionStrategy->Play: return result
+    Play->Playbook: return result
+
 end
-AdhocCLI->TaskQueueManager: cleanup()
+Playbook-->AdhocCLI: return result
 AdhocCLI-->ansible: return result
 ansible-->User: return
 
