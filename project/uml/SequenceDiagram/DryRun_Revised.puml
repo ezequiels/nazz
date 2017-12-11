@@ -2,11 +2,11 @@
 actor User
 User->ansible:ansible-playbook --check
 ansible->PlaybookCLI: run()
-participant InventoryManager
+participant Inventory #GreenYellow
 participant Playbook #GreenYellow
 PlaybookCLI->Playbook:init(..)
-Playbook->InventoryManager: list_hosts()
-Playbook<--InventoryManager: return hosts
+Playbook->Inventory: list_hosts()
+Playbook<--Inventory: return hosts
 participant PlaybookExecutionStrategy #GreenYellow
 PlaybookCLI->Playbook:run(playbook)
 Playbook->PlaybookExecutionStrategy:run()
@@ -21,8 +21,8 @@ loop for all plays
     Play-->PlaybookExecutionStrategy: return result
 end
 PlaybookExecutionStrategy-->Playbook: return result
-Playbook->InventoryManager: unreachable_hosts()
-InventoryManager-->Playbook: return unreachable_hosts
+Playbook->Inventory: unreachable_hosts()
+Inventory-->Playbook: return unreachable_hosts
 Playbook->PlaybookCLI: return result
 PlaybookCLI-->ansible: return result
 ansible-->User: return

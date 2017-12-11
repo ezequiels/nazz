@@ -9,18 +9,16 @@ skinparam package {
 package "ControlMachine" {
 
     commandLine - [CLI]
-    [CLI] --> [Processes] : {VariableManager, \nDataLoader, \noptions, \npasswords}
-    [Processes] ..> CLI : {results}
+    [CLI] --> [Processes] : {Variables, \nInventory}
+    [Processes] ...> CLI : {results}
     [Processes] -> [Resources]
     [Processes] <. [Resources] : {hosts}
 
-    [Processes] --> [Engine] : {InventoryManager, \nVariableManager, \nDataLoader, \noptions, \npasswords}
+    [Processes] --> [Engine] : {Variables, \nInventory}
     [Engine] ..> Processes : {results}
 
     [Transport] .> [Engine] : {results}
     [Engine] --> [Transport] : {actionHandler}
-
-    [CLI] - [Configuration]
 }
 
  component [Resources] #GreenYellow

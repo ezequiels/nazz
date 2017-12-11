@@ -6,6 +6,9 @@ participant Action #GreenYellow
 participant Connection
 boundary "SSH client/server connection" as SSH
 control "ssh daemon (or winrm service)" as daemon
+TaskExecutionStrategy->Action: init(..)
+
+TaskExecutionStrategy->Action: init(..)
 
 TaskExecutionStrategy->Action: run()
 
