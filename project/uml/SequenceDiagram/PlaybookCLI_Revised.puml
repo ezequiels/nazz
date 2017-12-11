@@ -1,0 +1,27 @@
+@startuml
+
+participant PlaybookCLI
+participant Variables #GreenYellow
+participant Inventory #GreenYellow
+participant Playbook #GreenYellow
+
+create Variables
+PlaybookCLI -> Variables: init(...)
+Variables --> PlaybookCLI
+create Inventory
+PlaybookCLI -> Inventory: init(InventoryFile)
+Inventory --> PlaybookCLI
+loop for each playbook
+
+create Playbook
+PlaybookCLI -> Playbook: init(Variables, Inventory, PlaybookFile)
+PlaybookCLI -> Playbook: run()
+
+...
+Playbook --> PlaybookCLI: result
+
+end
+
+
+@enduml
+

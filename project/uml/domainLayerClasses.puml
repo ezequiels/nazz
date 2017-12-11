@@ -33,6 +33,9 @@ Package "Domain Layer"{
         abstract Inventory
         Group *-- "*" Host
         Inventory *- "*" Group
+
+        class Variables
+        Playbook *-- "*" Variables
     }
 }
 

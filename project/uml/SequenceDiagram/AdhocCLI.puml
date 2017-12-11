@@ -1,37 +1,10 @@
 @startuml
 
-skinparam backgroundcolor transparent
-
-title Ansible Adhoc CLI
-actor User
-User->ansible: main
-ansible->AdhocCLI: run()
-AdhocCLI->InventoryManager: list_hosts()
-InventoryManager-->AdhocCLI: hostnames
-AdhocCLI->Play: get_plays()
-Play-->AdhocCLI: return plays
-loop for all plays
-    AdhocCLI->TaskQueueManager:run(play)
-    TaskQueueManager->StrategyBase: run()
-    StrategyBase->WorkerProcess: start()
-    WorkerProcess->TaskExecutor: run()
-    TaskExecutor->ActionBase: execute_module()
-    ActionBase -> Connection: exec_command()
-    entity RemoteMachine
-    Connection->RemoteMachine:run module remotely
-    Connection <-- RemoteMachine: return response
-    ActionBase <-- Connection: return response
-    ActionBase-->TaskExecutor: return data
-    TaskExecutor-->WorkerProcess: return result
-    WorkerProcess <- WorkerProcess: put result in queue
-    StrategyBase->StrategyBase:process_results()
-    StrategyBase-->TaskQueueManager: return result
-    TaskQueueManager-> StrategyBase: cleanup()
-    TaskQueueManager-->AdhocCLI: return play_return
-end
-AdhocCLI->TaskQueueManager: cleanup()
-AdhocCLI-->ansible: return result
-ansible-->User: return
-
-
+participant AdHocCLI
+create TaskQueueManager
+AdHocCLI -> TaskQueueManager: init(inventory, variable_manager, loader, options, passwords, stdout_callback, run_additional_callbacks, run_tree)
+AdHocCLI -> TaskQueueManager: run(play)
+...
+TaskQueueManager --> AdHocCLI: result
 @enduml
+

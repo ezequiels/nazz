@@ -1,51 +1,21 @@
 @startuml
 
-'skinparam backgroundcolor transparent
-
-title Ansible Adhoc CLI
-actor User
-User->ansible: main
-ansible->AdhocCLI: run()
-
+participant AdHocCLI
+participant Variables #GreenYellow
 participant Inventory #GreenYellow
 participant Playbook #GreenYellow
-AdhocCLI->Playbook: run()
 
-Playbook->Inventory: list_hostgroup()
-Inventory-->Playbook: return hostgroup
-
-participant Play #GreenYellow
-participant PlayExecutionStrategy #GreenYellow
-participant ConcurrencyStrategy #GreenYellow
-
-
-loop for all plays
-    Playbook -> Play:run(play)
-    Play -> PlayExecutionStrategy: run()
-    PlayExecutionStrategy -> ConcurrencyStrategy: run()
-    ConcurrencyStrategy -> WorkerProcess: run()
-
-    participant Task #GreenYellow
-    participant Action #GreenYellow
-
-    WorkerProcess -> Task: run()
-    Task -> Action: run()
-    Action -> Connection: exec_command()
-    entity RemoteMachine
-    Connection -> RemoteMachine:run module remotely
-    Connection <-- RemoteMachine: return response
-    Action <-- Connection: return response
-    Action --> Task: return data
-    Task --> WorkerProcess: return result
-    WorkerProcess --> ConcurrencyStrategy: return result
-    ConcurrencyStrategy --> PlayExecutionStrategy: return result
-    PlayExecutionStrategy->Play: return result
-    Play->Playbook: return result
-
-end
-Playbook-->AdhocCLI: return result
-AdhocCLI-->ansible: return result
-ansible-->User: return
-
+create Variables
+AdHocCLI -> Variables: init(...)
+Variables --> AdHocCLI
+create Inventory
+AdHocCLI -> Inventory: init(InventoryFile)
+Inventory --> AdHocCLI
+create Playbook
+AdHocCLI -> Playbook: init(Variables, Inventory)
+AdHocCLI -> Playbook: run()
+...
+Playbook --> AdHocCLI: result
 
 @enduml
+

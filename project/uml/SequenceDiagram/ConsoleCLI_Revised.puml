@@ -1,0 +1,20 @@
+@startuml
+
+participant ConsoleCLI
+participant Variables #GreenYellow
+participant Inventory #GreenYellow
+participant Playbook #GreenYellow
+
+create Variables
+ConsoleCLI -> Variables: init(...)
+Variables --> ConsoleCLI
+create Inventory
+ConsoleCLI -> Inventory: init(InventoryFile)
+Inventory --> ConsoleCLI
+create Playbook
+ConsoleCLI -> Playbook: init(Variables, Inventory)
+ConsoleCLI -> Playbook: run()
+...
+Playbook --> ConsoleCLI: result
+
+@enduml
