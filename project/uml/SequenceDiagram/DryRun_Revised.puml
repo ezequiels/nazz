@@ -2,8 +2,8 @@
 actor User
 User->ansible:ansible-playbook --check
 ansible->PlaybookCLI: run()
-participant Inventory #GreenYellow
 participant Playbook #GreenYellow
+participant Inventory #GreenYellow
 PlaybookCLI->Playbook:init(..)
 Playbook->Inventory: list_hosts()
 Playbook<--Inventory: return hosts

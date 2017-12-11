@@ -1,27 +1,27 @@
 @startuml
-participant TaskQueueManager
+participant PlayExecutionStrategy
 participant PluginLoader
-TaskQueueManager->PluginLoader:get(strategy, self)
-create StrategyBase
-PluginLoader->StrategyBase: init(task_queue_manager)
-TaskQueueManager<--PluginLoader:return strategy
-TaskQueueManager->StrategyBase: run(play_iterator, play_context))
+participant ConcurrencyStrategy #greenYellow
+PlayExecutionStrategy->PluginLoader:get(concurrencyStrategyName, self)
+create ConcurrencyStrategy
+PluginLoader->ConcurrencyStrategy: init(playExecutionStrategy)
+PlayExecutionStrategy<--PluginLoader: return strategy
+PlayExecutionStrategy->ConcurrencyStrategy: run(play_iterator, play_context)
 
 loop for each task in play
 create multiprocessing.Process
-StrategyBase->multiprocessing.Process: init(result_q, host, task, play_context)
+ConcurrencyStrategy->multiprocessing.Process: init(result_q, host, task, play_context)
 activate multiprocessing.Process
-create TaskExecutor
-multiprocessing.Process->TaskExecutor: init()
-activate TaskExecutor
-multiprocessing.Process->TaskExecutor: run()
+participant Task #greenYellow
+activate Task
+multiprocessing.Process->Task: run()
 end loop
 
-StrategyBase<-->TaskExecutor: synchronize on\nresult_q to wait for\ntasks to complete
-deactivate TaskExecutor
+ConcurrencyStrategy<-->Task: synchronize on\nresult_q to wait for\ntasks to complete
+deactivate Task
 deactivate multiprocessing.Process
 
-TaskQueueManager<--StrategyBase: return response
-TaskQueueManager->StrategyBase: cleanup()
-TaskQueueManager<--StrategyBase: return after any\norphaned processes\nare terminated
+PlayExecutionStrategy<--ConcurrencyStrategy: return response
+PlayExecutionStrategy->ConcurrencyStrategy: cleanup()
+PlayExecutionStrategy<--ConcurrencyStrategy: return after any\norphaned processes\nare terminated
 @enduml
