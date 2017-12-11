@@ -1,0 +1,32 @@
+@startuml
+'skinparam backgroundcolor transparent
+
+participant TaskExecutionStrategy #GreenYellow
+participant Action #GreenYellow
+participant Connection
+boundary "SSH client/server connection" as SSH
+control "ssh daemon (or winrm service)" as daemon
+
+TaskExecutionStrategy->Action: run()
+
+Action->Connection: put_file()
+Connection->SSH: transfer module data
+SSH->daemon
+daemon->daemon: save module to disk
+daemon-->SSH
+Connection<--SSH: transfer complete
+Action<--Connection: return remote path
+
+Action->Connection: exec_command()
+
+Connection->SSH: run module remotely
+SSH->daemon
+daemon->daemon: execute shell command
+daemon-->SSH
+Connection<--SSH: return response code, stdout, stderr
+
+Action<--Connection: return response code, stdout, stderr
+
+TaskExecutionStrategy<--Action: return JSON
+
+@enduml
