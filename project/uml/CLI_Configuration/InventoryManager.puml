@@ -1,16 +1,18 @@
 @startuml
+
 participant CLI
-create InventoryManager
-CLI -> InventoryManager: init(loader,source)
+participant Inventory #GreenYellow
+create Inventory
+CLI -> Inventory: init(InventoryFile)
 create InventoryData
-InventoryManager->InventoryData: init()
-InventoryManager->InventoryManager: parse_source()
-CLI <-- InventoryManager: return
-CLI -> InventoryManager: list_hosts(patterns)
+Inventory->InventoryData: init()
+Inventory->Inventory: parse_source()
+CLI <-- Inventory: return
+CLI -> Inventory: list_hosts(patterns)
 loop for each pattern
-InventoryManager -> InventoryData : get_host(pattern)
-InventoryData --> InventoryManager : host
+Inventory -> InventoryData : get_host(pattern)
+InventoryData --> Inventory : host
 end loop
-CLI <-- InventoryManager: return hosts
+CLI <-- Inventory: return hosts
 
 @enduml
