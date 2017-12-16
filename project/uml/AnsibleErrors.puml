@@ -16,8 +16,8 @@ AnsibleRuntimeError <|-- AnsibleConnectionFailureError
 AnsibleRuntimeError <|--- AnsibleFilterError
 AnsibleRuntimeError <|-- AnsibleLookupError
 AnsibleRuntimeError <|--- AnsibleCallbackError
-class AnsibleUndefinedVariable #greenyellow
-AnsibleRuntimeError <|-- AnsibleUndefinedVariable
+class AnsibleUndefinedVariableError #greenyellow
+AnsibleRuntimeError <|-- AnsibleUndefinedVariableError
 class AnsibleFileNotFoundError #greenyellow
 AnsibleRuntimeError <|--- AnsibleFileNotFoundError
 class AnsibleActionSkipError #greenyellow
